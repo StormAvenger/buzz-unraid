@@ -1,0 +1,29 @@
+name: Check container
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  linux-build-and-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check source
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate Compose files
+        run: docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
+      - name: Build Linux image
+        run: docker build --platform linux/amd64 -t buzz-unraid:ci .
+      - name: Check browser and Buzz (CPU)
+        run: sh scripts/smoke-test.sh buzz-unraid:ci
+      - name: Collect smoke-test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-logs
+          path: /tmp/buzz-smoke-*.log
+          if-no-files-found: ignore

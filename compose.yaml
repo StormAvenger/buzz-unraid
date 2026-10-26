@@ -1,0 +1,23 @@
+services:
+  buzz:
+    image: buzz-unraid:0.1.0-dev
+    platform: linux/amd64
+    build:
+      context: .
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:${WEB_PORT:-5800}:5800"
+    environment:
+      USER_ID: "${USER_ID:-99}"
+      GROUP_ID: "${GROUP_ID:-100}"
+      UMASK: "0002"
+      TZ: "${TZ:-America/Los_Angeles}"
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+      BUZZ_REDUCE_GPU_MEMORY: "true"
+    volumes:
+      - "${CONFIG_DIR:-./data/config}:/config"
+      - "${INPUT_DIR:-./data/input}:/input:ro"
+      - "${UPLOAD_DIR:-./data/uploads}:/uploads"
+      - "${OUTPUT_DIR:-./data/output}:/output"
+    shm_size: 1gb
+    restart: unless-stopped
+    stop_grace_period: 60s

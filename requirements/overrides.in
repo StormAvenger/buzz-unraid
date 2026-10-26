@@ -1,0 +1,4 @@
+# Buzz 1.4.5 declares torch 2.8 with torchcodec>=0.9, an incompatible pair.
+# TorchCodec's official matrix pairs torch 2.8 with torchcodec 0.7.
+# This is an intentional compatibility override; see docs/MAINTENANCE.md.
+torchcodec==0.7.0

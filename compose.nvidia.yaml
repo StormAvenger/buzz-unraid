@@ -1,0 +1,10 @@
+# Explicit opt-in: docker compose -f compose.yaml -f compose.nvidia.yaml up -d --build
+services:
+  buzz:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["${NVIDIA_GPU_DEVICE:-0}"]
+              capabilities: [gpu]

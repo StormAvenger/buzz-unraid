@@ -1,0 +1,14 @@
+.git
+.github
+.agents
+.codex
+.aws
+.env
+.env.*
+!.env.example
+data
+*.zip
+__pycache__
+*.pyc
+.DS_Store
+*.local.md

@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Container version="2">
+  <Name>buzz</Name>
+  <Repository>ghcr.io/stormavenger/buzz-unraid:latest</Repository>
+  <Registry>https://github.com/StormAvenger/buzz-unraid/pkgs/container/buzz-unraid</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/StormAvenger/buzz-unraid/issues</Support>
+  <Project>https://github.com/StormAvenger/buzz-unraid</Project>
+  <Overview>Unofficial Buzz desktop container with browser access, NVIDIA transcription, browser uploads, and persistent settings/models. Tested on Unraid 7.3.3 with a GTX 1080 8 GB. Open WebUI to use Buzz. Import mapped server files from /input (read-only), upload local files to /uploads through the sidebar file manager, and collect TXT/SRT/VTT exports from /output. Requires the Unraid NVIDIA Driver plugin and a compatible NVIDIA runtime. Local-network, single-user setup; browser microphone forwarding is not configured.</Overview>
+  <Category>Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:5800]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/templates/buzz.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/icon.svg</Icon>
+  <ExtraParams>--runtime=nvidia --shm-size=1g</ExtraParams>
+  <PostArgs />
+  <CPUset />
+  <DateInstalled />
+  <Config Name="Web interface" Target="5800" Default="5800" Mode="tcp" Description="Open this port using the WebUI action." Type="Port" Display="always" Required="true" Mask="false">5800</Config>
+  <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/buzz" Mode="rw" Description="Dedicated folder for settings, history and downloaded models." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/buzz</Config>
+  <Config Name="Source files (read-only)" Target="/input" Default="/mnt/user/transcription-input" Mode="ro" Description="Choose the share containing your existing audio/video. Buzz cannot modify these originals." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcription-input</Config>
+  <Config Name="Browser uploads" Target="/uploads" Default="/mnt/user/transcription-uploads" Mode="rw" Description="Upload laptop files here using the browser file manager, then open them in Buzz." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcription-uploads</Config>
+  <Config Name="Transcripts" Target="/output" Default="/mnt/user/transcriptions" Mode="rw" Description="Automatic TXT, SRT and VTT exports. Download through the browser file manager or access the share." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcriptions</Config>
+  <Config Name="NVIDIA GPU" Target="NVIDIA_VISIBLE_DEVICES" Default="all" Mode="" Description="Use your GPU UUID from nvidia-smi -L; all is suitable for a server with one NVIDIA GPU." Type="Variable" Display="always" Required="true" Mask="false">all</Config>
+  <Config Name="NVIDIA capabilities" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,utility" Mode="" Description="GPU computation and diagnostics; desktop rendering uses software." Type="Variable" Display="advanced" Required="true" Mask="false">compute,utility</Config>
+  <Config Name="User ID" Target="USER_ID" Default="99" Mode="" Description="Unraid nobody user; match the owner of your writable folders." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+  <Config Name="Group ID" Target="GROUP_ID" Default="100" Mode="" Description="Unraid users group." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="File permission mask" Target="UMASK" Default="0002" Mode="" Description="New files are writable by the users group." Type="Variable" Display="advanced" Required="true" Mask="false">0002</Config>
+  <Config Name="Reduce GPU memory" Target="BUZZ_REDUCE_GPU_MEMORY" Default="true" Mode="" Description="Enable INT8 inference; the container adapts it to Pascal GPUs." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+</Container>

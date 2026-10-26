@@ -1,0 +1,17 @@
+# Third-party software
+
+Container-specific source, scripts, tests, configuration, original artwork, and documentation are Copyright (C) 2026 StormAvenger and licensed under GPL-3.0-only; see the root LICENSE. This does not replace upstream notices or third-party licenses.
+
+This is an unofficial container for Buzz. It is not endorsed by the Buzz maintainers, Unraid, NVIDIA, or the GUI base maintainer.
+
+- Buzz: https://github.com/chidiwilliams/buzz — MIT. Its license text is preserved in `licenses/Buzz-LICENSE` and in the installed wheel.
+- jlesage GUI base: https://github.com/jlesage/docker-baseimage-gui — MIT for the base project; bundled components have their own licenses.
+- Faster Whisper: https://github.com/SYSTRAN/faster-whisper — MIT.
+- CTranslate2: https://github.com/OpenNMT/CTranslate2 — MIT.
+- PyTorch, torchaudio, TorchCodec, Qt/PyQt, FFmpeg, Demucs and other dependencies retain their own license terms. Buzz's MIT license does not replace them.
+- CUDA/cuDNN and NVIDIA runtime packages are subject to NVIDIA's applicable license terms.
+- Downloaded model weights are separate artifacts with their own license terms. They are downloaded into appdata rather than included in this image by default.
+
+This file is an initial inventory, not a completed redistribution review. Before public distribution, inventory all installed packages and components, preserve required notices, and satisfy applicable source or redistribution obligations. In particular, review the GPL/commercial licensing of PyQt6 and the licenses of bundled FFmpeg/Qt components. Do not label the complete image as exclusively MIT licensed.
+
+Container-specific GPU, export, and plugin dependency changes to Buzz's installed Python files are documented in `docs/MAINTENANCE.md` and reproducibly applied by `scripts/patch-buzz.py`.

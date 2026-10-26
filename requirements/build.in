@@ -1,0 +1,5 @@
+# Bootstrap for legacy source builds (notably diffq).
+numpy==1.26.4
+setuptools==80.9.0
+cython==3.0.12
+wheel==0.45.1

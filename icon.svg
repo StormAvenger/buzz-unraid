@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">Buzz container: microphone and transcript</title>
+  <rect x="8" y="8" width="240" height="240" rx="48" fill="#14263d"/>
+  <rect x="59" y="42" width="54" height="96" rx="27" fill="#ffc857"/>
+  <path d="M41 111v11a45 45 0 0 0 90 0v-11M86 167v35M61 202h50" fill="none" stroke="#ffc857" stroke-width="12" stroke-linecap="round"/>
+  <path d="M157 81h49M157 113h49M157 145h49M157 177h32" fill="none" stroke="#e8f0f9" stroke-width="12" stroke-linecap="round"/>
+</svg>
