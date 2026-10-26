@@ -3,7 +3,8 @@
 ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0
 FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
 FROM ${GUI_IMAGE} AS common
-USER 0
+# The base creates account files at startup; avoid build-time name/group lookup.
+USER 0:0
 RUN add-pkg \
     ca-certificates ffmpeg fonts-dejavu-core gettext libasound2t64 \
     libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
