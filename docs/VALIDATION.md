@@ -18,7 +18,7 @@
 - A public Whisper test recording was uploaded using the browser file manager, imported in Buzz, and transcribed with Faster Whisper Small in approximately 10 seconds. Container logs reported CUDA 12.6. TXT/SRT/VTT files were created in the mapped output folder as `nobody:users`.
 - Remote Resizing made the desktop fit the browser window.
 
-The runtime was validated before adding repository licensing, artwork, and publication metadata. GitHub CI must rebuild and test the current source before a public image release.
+The [GitHub Linux check](https://github.com/StormAvenger/buzz-unraid/actions/runs/40421887408) passed for commit `d0fbdb7e1f926b988ce6557fc25c43e2f233c8a1`, including the repository licensing, artwork, and publication metadata. Source tests, Compose validation, the Linux amd64 image build, and the disposable CPU/browser/persistent-storage smoke test all passed on the hosted Ubuntu runner. GPU inference was verified separately on the Unraid server.
 
 ## Still unverified or unpublished
 

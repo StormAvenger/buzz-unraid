@@ -2,13 +2,13 @@
 
 ## Current state
 
-The source is prepared for `StormAvenger/buzz-unraid` under GPL-3.0-only, matching creator5-ha. The development container has passed the server checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
+The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under GPL-3.0-only, matching creator5-ha. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
 
 ## 1. Publish the source repository
 
 Keep the repository public. Include the Dockerfile, complete container-specific source/patches, dependency inputs and locks, tests, GPL license, original Buzz MIT notice, and third-party notices. Do not publish appdata, downloaded models, recordings, credentials, build logs, or machine-specific deployment notes.
 
-GitHub's **Check container** workflow builds/tests the project on Linux amd64. Fix any CI failures before cutting a release. The hosted runner's disk requirements must be verified with this large ML stack; the image has only been built on the Unraid host so far.
+GitHub's **Check container** workflow builds/tests the project on Linux amd64. The first complete hosted build and CPU smoke test passed on October 26, 2026. Keep these checks passing before cutting a release; future dependency updates may change this large ML stack's storage requirements.
 
 ## 2. Prepare and publish a downloadable image
 
