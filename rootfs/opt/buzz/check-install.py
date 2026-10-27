@@ -21,6 +21,9 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import torchcodec
     import ctranslate2
     import faster_whisper
+    import hydra
+    import lightning
+    import fsspec.implementations.http
     from buzz.widgets.application import Application
     from PyQt6.QtCore import QSettings
     import runpy

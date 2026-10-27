@@ -6,4 +6,4 @@ torchaudio @ https://download.pytorch.org/whl/cu126/torchaudio-2.8.0%2Bcu126-cp3
 faster-whisper==1.2.1
 ctranslate2==4.6.2
 numpy==1.26.4
-setuptools==80.9.0
+setuptools==81.0.0

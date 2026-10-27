@@ -6,7 +6,7 @@ FROM ${GUI_IMAGE} AS common
 # The base creates account files at startup; avoid build-time name/group lookup.
 USER 0:0
 RUN add-pkg \
-    ca-certificates ffmpeg fonts-dejavu-core gettext libasound2t64 \
+    ca-certificates openssl libssl3t64 ffmpeg fonts-dejavu-core gettext libasound2t64 \
     libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
     libsndfile1 libtbb12 libvulkan1 libxkbcommon-x11-0 libxcb-cursor0 \
     libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
@@ -30,6 +30,9 @@ RUN --mount=type=cache,target=/root/.cache/uv \
         --no-build-isolation-package diffq -r /build/requirements/runtime.lock
 COPY scripts/patch-buzz.py /build/patch-buzz.py
 RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-packages
+# Filter before the runtime COPY so headers never enter a published image layer.
+# cuDNN's redistribution supplement permits its runtime libraries, not headers.
+RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include
 FROM common AS runtime
 ARG IMAGE_VERSION=0.1.0-dev
 ARG SOURCE_REVISION=unknown

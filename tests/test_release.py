@@ -12,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("sources", ROOT / "scripts/collect-sources.py")
 sources = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sources)
+scan_spec = importlib.util.spec_from_file_location("image_scan", ROOT / "scripts/check-image-scan.py")
+image_scan = importlib.util.module_from_spec(scan_spec)
+scan_spec.loader.exec_module(image_scan)
 
 
 class SourceRecordsTests(unittest.TestCase):
@@ -44,6 +47,26 @@ class SourceRecordsTests(unittest.TestCase):
             with patch.object(sources, "request", return_value=response):
                 with self.assertRaisesRegex(ValueError, "hash mismatch"):
                     sources.download({"url": "https://example.org/source.tar.gz", "component": "example", "sha256": "0" * 64}, Path(directory))
+
+
+class ImageScanTests(unittest.TestCase):
+    def test_high_findings_block_even_without_a_published_fix(self):
+        report = {"SchemaVersion": 2, "Results": [{"Vulnerabilities": [
+            {"Severity": "HIGH", "VulnerabilityID": "CVE-example", "PkgName": "example", "InstalledVersion": "1.0"}
+        ]}]}
+        with self.assertRaisesRegex(ValueError, "CVE-example"):
+            image_scan.check_report(report)
+
+    def test_lower_severity_findings_stay_visible(self):
+        report = {"SchemaVersion": 2, "Results": [{"Vulnerabilities": [
+            {"Severity": "MEDIUM"}, {"Severity": "LOW"}
+        ]}]}
+        self.assertEqual(image_scan.check_report(report), {"LOW": 1, "MEDIUM": 1})
+
+    def test_missing_scan_is_not_a_clean_scan(self):
+        for report in ({}, {"SchemaVersion": 2, "Results": []}):
+            with self.assertRaisesRegex(ValueError, "Missing"):
+                image_scan.check_report(report)
 
 
 if __name__ == "__main__":

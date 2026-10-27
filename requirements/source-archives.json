@@ -83,8 +83,9 @@
     },
     {
       "component": "gmp",
-      "url": "https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz",
-      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+      "url": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh",
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898"
     },
     {
       "component": "nettle",
@@ -308,9 +309,9 @@
     },
     {
       "component": "pyav-lamer",
-      "url": "https://github.com/basswood-io/lamer/archive/refs/tags/v3.101.0.tar.gz",
-      "sha256": "81839b16fdc401e20b73389d05f32a7656008f43bcb960feff290d6f08fc109e",
-      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+      "url": "https://codeload.github.com/basswood-io/bwlame/tar.gz/3ffd14f5531e0e5078e31eba4b2fb6ccc277b843",
+      "sha256": "b9b255f8b58e99c052eb7cfc78daea096d967d08c080fe74455b212e00132995",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 lamer v3.101.0; upstream repository renamed to bwlame; exact tagged commit"
     },
     {
       "component": "pyav-opus",
@@ -385,6 +386,17 @@
       "component": "xterm-addon-fit",
       "url": "https://registry.npmjs.org/@xterm/addon-fit/-/addon-fit-0.11.0.tgz",
       "origin": "GUI base v4.14.0 web interface dependency"
+    },
+    {
+      "component": "lameenc",
+      "url": "https://codeload.github.com/chrisstaite/lameenc/tar.gz/77aba334b8a2ca4a8bb8c5997f3d8c11ca5d90b1",
+      "origin": "lameenc v1.9.0 exact release commit, including LAME patch/build recipe"
+    },
+    {
+      "component": "lame",
+      "url": "https://downloads.sourceforge.net/project/lame/lame/4.0/lame-4.0.tar.gz",
+      "sha256": "3df5124d5ad3a98312ffd7ba6a9b36230e4f8a3e66d3ce0f425e336c32d216eb",
+      "origin": "lameenc v1.9.0 CMakeLists.txt native library source"
     }
   ]
 }

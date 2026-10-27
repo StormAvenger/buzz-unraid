@@ -7,6 +7,9 @@
   <Privileged>false</Privileged>
   <Support>https://github.com/StormAvenger/buzz-unraid/issues</Support>
   <Project>https://github.com/StormAvenger/buzz-unraid</Project>
+  <ReadMe>https://github.com/StormAvenger/buzz-unraid#readme</ReadMe>
+  <License>https://github.com/StormAvenger/buzz-unraid/blob/main/LICENSE</License>
+  <Requires>NVIDIA Driver plugin, a compatible NVIDIA GPU, and an amd64 Unraid server. Single-user desktop; use on a trusted local network or VPN.</Requires>
   <Overview>Transcribe audio and video with Buzz in your browser. Choose your Input folder and Output folder, then click Apply. Everything else is prefilled. After installation, click the Buzz icon and choose WebUI. In Buzz, click + and open your recordings from /input; transcripts and subtitles are saved to /output. Requires the Unraid NVIDIA Driver plugin with a working NVIDIA GPU. Settings, downloaded models, and browser uploads are saved automatically. For use on your local network or VPN.</Overview>
   <Category>Tools:Utilities</Category>
   <WebUI>http://[IP]:[PORT:5800]/</WebUI>
@@ -19,7 +22,7 @@
   <Config Name="Web port" Target="5800" Default="8088" Mode="tcp" Description="The browser port is prefilled. Change it only if another app uses it." Type="Port" Display="advanced" Required="true" Mask="false">8088</Config>
   <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/buzz" Mode="rw" Description="Stores settings, history, and downloaded models. The default is ready to use." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/buzz</Config>
   <Config Name="Input folder" Target="/input" Default="/mnt/user/transcription-input" Mode="ro" Description="Choose the folder containing your audio or video files. In Buzz, click + and open /input. Originals stay unchanged." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcription-input</Config>
-  <Config Name="Browser uploads" Target="/uploads" Default="/mnt/user/transcription-uploads" Mode="rw" Description="Stores files uploaded through the browser sidebar. The default is ready to use." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/transcription-uploads</Config>
+  <Config Name="Browser uploads" Target="/uploads" Default="/mnt/user/transcription-uploads" Mode="rw" Description="Stores files sent with the Upload files button. The default is ready to use." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/transcription-uploads</Config>
   <Config Name="Output folder" Target="/output" Default="/mnt/user/transcriptions" Mode="rw" Description="Choose where Buzz saves transcripts and subtitles. Buzz saves them here automatically." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcriptions</Config>
   <Config Name="NVIDIA GPU" Target="NVIDIA_VISIBLE_DEVICES" Default="all" Mode="" Description="Uses all NVIDIA GPUs by default. Change this only to select a specific GPU." Type="Variable" Display="advanced" Required="true" Mask="false">all</Config>
   <Config Name="NVIDIA capabilities" Target="NVIDIA_DRIVER_CAPABILITIES" Default="compute,utility" Mode="" Description="GPU computation and diagnostics; desktop rendering uses software." Type="Variable" Display="advanced" Required="true" Mask="false">compute,utility</Config>
