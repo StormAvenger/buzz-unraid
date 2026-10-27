@@ -2,7 +2,7 @@
 
 ## Current state
 
-The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under GPL-3.0-only, matching creator5-ha. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
+The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under GPL-3.0-only. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
 
 ## 1. Publish the source repository
 
