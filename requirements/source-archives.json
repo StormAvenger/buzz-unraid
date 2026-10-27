@@ -1,0 +1,390 @@
+{
+  "schema": 1,
+  "archives": [
+    {
+      "component": "pulseaudio",
+      "url": "https://www.freedesktop.org/software/pulseaudio/releases/pulseaudio-16.1.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/pulseaudio/build.sh"
+    },
+    {
+      "component": "libsndfile",
+      "url": "https://github.com/libsndfile/libsndfile/releases/download/1.2.2/libsndfile-1.2.2.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/pulseaudio/build.sh"
+    },
+    {
+      "component": "dbus",
+      "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.14.10.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/dbus-daemon/build.sh"
+    },
+    {
+      "component": "fastcompmgr",
+      "url": "https://github.com/tycho-kirchner/fastcompmgr/archive/refs/tags/v0.6.1.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/fastcompmgr/build.sh"
+    },
+    {
+      "component": "libxdamage",
+      "url": "https://www.x.org/releases/individual/lib/libXdamage-1.1.6.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/fastcompmgr/build.sh"
+    },
+    {
+      "component": "fontconfig",
+      "url": "https://distfiles.macports.org/fontconfig/fontconfig-2.15.0.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/fontconfig/build.sh / unchanged release archive mirror"
+    },
+    {
+      "component": "httpd",
+      "url": "https://archive.apache.org/dist/httpd/httpd-2.4.68.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/htpasswd/build.sh"
+    },
+    {
+      "component": "mesa",
+      "url": "https://archive.mesa3d.org/mesa-24.2.8.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "nginx",
+      "url": "https://nginx.org/download/nginx-1.30.4.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/nginx/build.sh"
+    },
+    {
+      "component": "nginxwebsockifymod",
+      "url": "https://github.com/tg123/websockify-nginx-module/archive/v0.0.3.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/nginx/build.sh"
+    },
+    {
+      "component": "openbox",
+      "url": "https://openbox.org/dist/openbox/openbox-3.6.1.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/openbox/build.sh"
+    },
+    {
+      "component": "pango",
+      "url": "https://download.gnome.org/sources/pango/1.49/pango-1.49.3.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/openbox/build.sh"
+    },
+    {
+      "component": "libxrandr",
+      "url": "https://www.x.org/releases/individual/lib/libXrandr-1.5.4.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/openbox/build.sh"
+    },
+    {
+      "component": "brotli",
+      "url": "https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "tigervnc",
+      "url": "https://github.com/TigerVNC/tigervnc/archive/v1.16.2.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "xserver",
+      "url": "https://www.x.org/releases/individual/xserver/xorg-server-21.1.21.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "gmp",
+      "url": "https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "nettle",
+      "url": "https://ftpmirror.gnu.org/gnu/nettle/nettle-3.10.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "gnutls",
+      "url": "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.5.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libxfont2",
+      "url": "https://www.x.org/pub/individual/lib/libXfont2-2.0.7.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libfontenc",
+      "url": "https://www.x.org/releases/individual/lib/libfontenc-1.1.8.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libtasn1",
+      "url": "https://ftpmirror.gnu.org/gnu/libtasn1/libtasn1-4.20.0.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libxshmfence",
+      "url": "https://www.x.org/releases/individual/lib/libxshmfence-1.3.2.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libxxf86vm",
+      "url": "https://www.x.org/releases/individual/lib/libXxf86vm-1.1.5.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "libdrm",
+      "url": "https://dri.freedesktop.org/libdrm/libdrm-2.4.123.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "pixman",
+      "url": "https://www.x.org/releases/individual/lib/pixman-0.43.4.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "llvm",
+      "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.4/llvm-project-19.1.4.src.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "xkeyboardconfig",
+      "url": "https://www.x.org/archive/individual/data/xkeyboard-config/xkeyboard-config-2.43.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/tigervnc/build.sh"
+    },
+    {
+      "component": "xkbcomp",
+      "url": "https://www.x.org/releases/individual/app/xkbcomp-1.4.7.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/xkbcomp/build.sh"
+    },
+    {
+      "component": "xkeyboardconfig",
+      "url": "https://www.x.org/archive/individual/data/xkeyboard-config/xkeyboard-config-2.41.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/xkeyboard-config/build.sh"
+    },
+    {
+      "component": "xrdb",
+      "url": "https://www.x.org/releases/individual/app/xrdb-1.2.2.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/xrdb/build.sh"
+    },
+    {
+      "component": "yad",
+      "url": "https://github.com/step-/yad/archive/refs/tags/0.42.43.tar.gz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "pango",
+      "url": "https://download.gnome.org/sources/pango/1.52/pango-1.52.2.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "gtk",
+      "url": "https://download.gnome.org/sources/gtk+/2.24/gtk%2B-2.24.33.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "atk",
+      "url": "https://download.gnome.org/sources/atk/2.38/atk-2.38.0.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "gdkpixbuf",
+      "url": "https://download.gnome.org/sources/gdk-pixbuf/2.42/gdk-pixbuf-2.42.11.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "cairo",
+      "url": "https://gitlab.freedesktop.org/cairo/cairo/-/archive/1.18.0/cairo-1.18.0.tar.bz2",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/yad/build.sh"
+    },
+    {
+      "component": "logrotate",
+      "url": "https://github.com/logrotate/logrotate/releases/download/3.21.0/logrotate-3.21.0.tar.xz",
+      "origin": "jlesage/docker-baseimage v3.11.12 / src/logrotate/build.sh"
+    },
+    {
+      "component": "popt",
+      "url": "https://ftp.osuosl.org/pub/rpm/popt/releases/popt-1.x/popt-1.19.tar.gz",
+      "origin": "jlesage/docker-baseimage v3.11.12 / src/logrotate/build.sh"
+    },
+    {
+      "component": "baseimage-gui-recipes",
+      "url": "https://codeload.github.com/jlesage/docker-baseimage-gui/tar.gz/refs/tags/v4.14.0",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "baseimage-recipes",
+      "url": "https://codeload.github.com/jlesage/docker-baseimage/tar.gz/refs/tags/v3.11.12",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "shadow-rs",
+      "url": "https://codeload.github.com/uutils/shadow/tar.gz/refs/tags/0.5.0",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "su-exec",
+      "url": "https://codeload.github.com/ncopa/su-exec/tar.gz/refs/tags/v0.2",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "novnc",
+      "url": "https://codeload.github.com/novnc/noVNC/tar.gz/refs/tags/v1.7.0",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "qt-everywhere",
+      "url": "https://download.qt.io/archive/qt/6.9/6.9.1/single/qt-everywhere-src-6.9.1.tar.xz",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "pyav-vendor-recipes",
+      "url": "https://codeload.github.com/PyAV-Org/pyav-ffmpeg/tar.gz/refs/tags/9.0.2-1",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "pyav-recipes",
+      "url": "https://codeload.github.com/PyAV-Org/PyAV/tar.gz/refs/tags/v19.0.2",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "pytorch",
+      "url": "https://codeload.github.com/pytorch/pytorch/tar.gz/refs/tags/v2.8.0",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "torchaudio",
+      "url": "https://codeload.github.com/pytorch/audio/tar.gz/refs/tags/v2.8.0",
+      "origin": "Pinned upstream release source / build recipes"
+    },
+    {
+      "component": "pyav-alsa-lib",
+      "url": "https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.14.tar.bz2",
+      "sha256": "be9c88a0b3604367dd74167a2b754a35e142f670292ae47a2fdef27a2ee97a32",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-nv-codec-headers",
+      "url": "https://github.com/FFmpeg/nv-codec-headers/archive/refs/tags/n13.0.19.0.tar.gz",
+      "sha256": "86d15d1a7c0ac73a0eafdfc57bebfeba7da8264595bf531cf4d8db1c22940116",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-amf-headers",
+      "url": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF/releases/download/v1.5.2/AMF-headers-v1.5.2.tar.gz",
+      "sha256": "d3c12eb324edf05e214608b6a395a51dd95770ed9d45520185d6c3a206811c99",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-libvpl",
+      "url": "https://github.com/intel/libvpl/archive/refs/tags/v2.16.0.tar.gz",
+      "sha256": "d60931937426130ddad9f1975c010543f0da99e67edb1c6070656b7947f633b6",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-nasm",
+      "url": "https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/nasm-2.16.03.tar.xz",
+      "sha256": "1412a1c760bbd05db026b6c0d1657affd6631cd0a63cddb6f73cc6d4aa616148",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-ffmpeg",
+      "url": "https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz",
+      "sha256": "8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-gmp",
+      "url": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-unistring",
+      "url": "https://ftp.gnu.org/gnu/libunistring/libunistring-1.4.2.tar.gz",
+      "sha256": "e82664b170064e62331962126b259d452d53b227bb4a93ab20040d846fec01d8",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-nettle",
+      "url": "https://ftp.gnu.org/gnu/nettle/nettle-4.0.tar.gz",
+      "sha256": "3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-gnutls",
+      "url": "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz",
+      "sha256": "ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-lamer",
+      "url": "https://github.com/basswood-io/lamer/archive/refs/tags/v3.101.0.tar.gz",
+      "sha256": "81839b16fdc401e20b73389d05f32a7656008f43bcb960feff290d6f08fc109e",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-opus",
+      "url": "https://ftp.osuosl.org/pub/xiph/releases/opus/opus-1.6.1.tar.gz",
+      "sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-dav1d",
+      "url": "https://code.videolan.org/videolan/dav1d/-/archive/1.5.4/dav1d-1.5.4.tar.bz2",
+      "sha256": "2abfb0c89212e6e4733a54e0ae509ec00a5b845a6360946f918806e14aedb011",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-libsvtav1",
+      "url": "https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/v4.2.0/SVT-AV1-v4.2.0.tar.bz2",
+      "sha256": "512f2ea5649e3e76c2dddcc25c2556fb67a9582baaab207c9c96161c94659dad",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-vpx",
+      "url": "https://github.com/webmproject/libvpx/archive/refs/tags/v1.17.0.tar.gz",
+      "sha256": "1020f184046187baa2985dbde38e0691f49c44088bca7a1842b0236c6081dc0a",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-png",
+      "url": "https://downloads.sourceforge.net/project/libpng/libpng16/1.6.58/libpng-1.6.58.tar.xz",
+      "sha256": "28eb403f51f0f7405249132cecfe82ea5c0ef97f1b32c5a65828814ae0d34775",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-webp",
+      "url": "https://github.com/webmproject/libwebp/archive/refs/tags/v1.6.0.tar.gz",
+      "sha256": "93a852c2b3efafee3723efd4636de855b46f9fe1efddd607e1f42f60fc8f2136",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-libvmaf",
+      "url": "https://github.com/Netflix/vmaf/archive/refs/tags/v3.2.1.tar.gz",
+      "sha256": "5df7386911bc15fd1ca783132528748d219768ae4fc5f8e0b61184f041648092",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-x264",
+      "url": "https://code.videolan.org/videolan/x264/-/archive/b35605ace3ddf7c1a5d67a2eb553f034aef41d55/x264-b35605ace3ddf7c1a5d67a2eb553f034aef41d55.tar.bz2",
+      "sha256": "6eeb82934e69fd51e043bd8c5b0d152839638d1ce7aa4eea65a3fedcf83ff224",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "pyav-x265",
+      "url": "https://github.com/Multicorewareinc/x265/releases/download/4.3/x265_4.3.tar.gz",
+      "sha256": "83c53e4c8bbb8f1e33ed59e10a7d621d1d7801ca853910c3eb41f038b8ffb121",
+      "origin": "PyAV pyav-ffmpeg 9.0.2-1 scripts/pkg.py"
+    },
+    {
+      "component": "bootstrap",
+      "url": "https://codeload.github.com/twbs/bootstrap/tar.gz/refs/tags/v5.3.3",
+      "origin": "GUI base v4.14.0 web interface dependency"
+    },
+    {
+      "component": "fontawesome",
+      "url": "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/refs/tags/5.15.4",
+      "origin": "GUI base v4.14.0 web interface dependency"
+    },
+    {
+      "component": "xterm",
+      "url": "https://registry.npmjs.org/@xterm/xterm/-/xterm-6.0.0.tgz",
+      "origin": "GUI base v4.14.0 web interface dependency"
+    },
+    {
+      "component": "xterm-addon-fit",
+      "url": "https://registry.npmjs.org/@xterm/addon-fit/-/addon-fit-0.11.0.tgz",
+      "origin": "GUI base v4.14.0 web interface dependency"
+    }
+  ]
+}

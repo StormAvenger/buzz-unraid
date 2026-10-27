@@ -107,7 +107,7 @@ docker build --platform linux/amd64 -t buzz-unraid:0.1.0-dev .
 sh scripts/smoke-test.sh buzz-unraid:0.1.0-dev
 ```
 
-The disposable CPU smoke test checks web readiness, the real application window, write permissions, and restart persistence. It removes only its own test container and anonymous volumes. The normal GitHub workflow builds/tests; it does not publish images. The separate **Publish image** workflow is manually run after the redistribution/source review described in [publishing notes](docs/PUBLISHING.md).
+The disposable CPU smoke test checks web readiness, the real application window, write permissions, and restart persistence. It removes only its own test container and anonymous volumes. The normal GitHub workflow builds/tests; it does not publish images. The separate **Publish image** workflow runs on published GitHub releases after the redistribution/source review described in [publishing notes](docs/PUBLISHING.md).
 
 Runtime plugin package installation is blocked by default to keep dependencies predictable. Disabled plugins do not attempt dependency installation. Plugins requiring extra packages need those packages added to the image and a rebuild. The explicit runtime-install override forfeits the locked-dependency guarantee and is not supported for the standard deployment.
 

@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # SPDX-License-Identifier: MIT
-ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0
-FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
+ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0@sha256:8004b5799addeb62e5ce2fed3b611016433faeb4f9d2126956128699b45fa3ee
+FROM ghcr.io/astral-sh/uv:0.13.5@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff AS uv
 FROM ${GUI_IMAGE} AS common
 # The base creates account files at startup; avoid build-time name/group lookup.
 USER 0:0
@@ -32,8 +32,11 @@ COPY scripts/patch-buzz.py /build/patch-buzz.py
 RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-packages
 FROM common AS runtime
 ARG IMAGE_VERSION=0.1.0-dev
+ARG SOURCE_REVISION=unknown
 LABEL org.opencontainers.image.title="Buzz for Unraid" \
     org.opencontainers.image.source="https://github.com/StormAvenger/buzz-unraid" \
+    org.opencontainers.image.revision="${SOURCE_REVISION}" \
+    org.opencontainers.image.version="${IMAGE_VERSION}" \
     org.opencontainers.image.description="Unofficial Buzz browser desktop container with NVIDIA transcription"
 # TorchCodec links to the shared Python library; python3 alone does not ship it.
 RUN add-pkg libpython3.12t64 && rm -rf /var/lib/apt/lists/*

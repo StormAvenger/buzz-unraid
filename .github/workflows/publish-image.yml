@@ -1,51 +1,118 @@
 name: Publish image
 on:
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: Container version to publish (for example 0.1.0 or 0.1.1-beta.1)
+        description: Container version (for example 0.1.0 or 0.1.1-beta.1)
         required: true
         default: "0.1.0"
         type: string
+      publish:
+        description: Publish image and attach records to an existing matching GitHub release
+        default: false
+        type: boolean
 permissions:
   contents: read
-  packages: write
 concurrency:
   group: publish-image
   cancel-in-progress: false
 jobs:
   build-test-publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      packages: write
     env:
       IMAGE: ghcr.io/stormavenger/buzz-unraid
-      VERSION: ${{ inputs.version }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || format('v{0}', inputs.version) }}
+      SHOULD_PUBLISH: ${{ github.event_name == 'release' || inputs.publish == true }}
+      IS_PRERELEASE: ${{ github.event.release.prerelease || false }}
     steps:
       - uses: actions/checkout@v4
-      - name: Validate version
+      - name: Validate release version
         shell: bash
         run: |
+          VERSION="${RELEASE_TAG#v}"
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.-]+)?$ ]]; then
             echo "Use a version such as 0.1.0 or 0.1.1-beta.1."
             exit 1
           fi
-      - name: Check source and templates
-        run: python3 -m unittest discover -s tests -v
-      - name: Validate Compose files
-        run: docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Check source and public file boundaries
+        run: |
+          python3 scripts/check-public-files.py
+          python3 -m unittest discover -s tests -v
+          docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
       - name: Build versioned image
-        run: docker build --platform linux/amd64 --build-arg IMAGE_VERSION="$VERSION" -t "$IMAGE:$VERSION" .
+        run: >-
+          docker build --platform linux/amd64
+          --build-arg IMAGE_VERSION="$VERSION"
+          --build-arg SOURCE_REVISION="$GITHUB_SHA"
+          -t "$IMAGE:$VERSION" .
       - name: Check browser and persistent storage
         run: sh scripts/smoke-test.sh "$IMAGE:$VERSION"
+      - name: Collect clean-image package inventory and notices
+        shell: bash
+        run: |
+          mkdir -p release-output
+          docker run --rm --network none --entrypoint /opt/venv/bin/python \
+            -v "$PWD/scripts/release-inventory.py:/inventory.py:ro" \
+            -v "$PWD/release-output:/release-output" \
+            "$IMAGE:$VERSION" /inventory.py /release-output
+          docker image inspect --format '{{json .Config.Labels}}' "$IMAGE:$VERSION" > release-output/image-labels.json
+          docker image inspect --format '{{.Size}}' "$IMAGE:$VERSION" > release-output/image-bytes.txt
+          # Keep the final image; release build caches before downloading sources.
+          docker builder prune --all --force
+      - name: Scan the built image
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock:ro \
+            -v "$PWD/release-output:/reports" \
+            ghcr.io/aquasecurity/trivy:0.76.1 image \
+            --scanners vuln --format json --output /reports/image-scan.json "$IMAGE:$VERSION"
+      - name: Collect matching upstream sources and checksums
+        run: python3 scripts/collect-sources.py release-output/inventory.json release-output
+      - name: Preserve release preparation records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-records
+          path: |
+            release-output/*.json
+            release-output/*.txt
+            release-output/SHA256SUMS
+            release-output/notices.tar.gz
+            release-output/sources.tar.part*
+          if-no-files-found: ignore
+      - name: Verify the matching GitHub release exists
+        if: env.SHOULD_PUBLISH == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY"
+      - name: Attach notices, sources and scan records before image publication
+        if: env.SHOULD_PUBLISH == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          gh release upload "$RELEASE_TAG"
+          release-output/*.json release-output/*.txt release-output/SHA256SUMS
+          release-output/notices.tar.gz release-output/sources.tar.part*
+          --repo "$GITHUB_REPOSITORY" --clobber
       - name: Authenticate to GHCR
+        if: env.SHOULD_PUBLISH == 'true'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish tested image
+        if: env.SHOULD_PUBLISH == 'true'
         run: docker push "$IMAGE:$VERSION"
       - name: Update stable image tag
+        if: env.SHOULD_PUBLISH == 'true' && env.IS_PRERELEASE != 'true'
         shell: bash
         run: |
           if [[ "$VERSION" != *-* ]]; then
