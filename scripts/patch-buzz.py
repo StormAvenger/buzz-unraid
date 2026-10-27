@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-"""Small, fail-closed compatibility changes to the pinned Buzz wheel."""
+"""Small, fail-closed compatibility changes to Buzz and its pinned decoder."""
 import argparse
 from pathlib import Path
 
@@ -36,6 +36,12 @@ PATCHES = (
         "        raise RuntimeError(\"This container manages packages at build time. \"\n"
         "                           \"Add the plugin dependencies to the image and rebuild.\")\n\n"
         "    cmd = get_pip_cmd()",
+    ),
+    (
+        "faster_whisper/audio.py",
+        'av.open(input_file, mode="r", metadata_errors="ignore")',
+        # PyAV 19 removed this keyword; metadata handling is now internal.
+        'av.open(input_file, mode="r")',
     ),
     (
         "buzz/transcriber/transcriber.py",

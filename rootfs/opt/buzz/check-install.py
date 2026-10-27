@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 import tempfile
+import wave
 
 with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     for name, relative in {
@@ -23,6 +24,17 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import torchcodec
     import ctranslate2
     import faster_whisper
+    from faster_whisper.audio import decode_audio
+    for channels, rate in ((1, 16000), (2, 22050)):
+        recording = Path(directory) / f"decoder-{channels}.wav"
+        with wave.open(str(recording), "wb") as audio:
+            audio.setnchannels(channels)
+            audio.setsampwidth(2)
+            audio.setframerate(rate)
+            audio.writeframes(b"\x00\x00" * rate * channels)
+        decoded = decode_audio(str(recording), split_stereo=channels == 2)
+        streams = (decoded,) if channels == 1 else decoded
+        assert all(len(stream) == 16000 for stream in streams), "Audio decoding/resampling failed"
     import hydra
     import lightning
     import fsspec.implementations.http
@@ -62,4 +74,4 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     assert Path(get_output_file_path(**arguments, output_directory="/explicit")).parent == Path("/explicit")
     app.window.close()
     app.quit()
-    print("Buzz main window, decoder imports, and persistent preferences: passed")
+    print("Buzz main window, real audio decoding/resampling, and persistent preferences: passed")

@@ -41,15 +41,16 @@ Sources:
 - [cuDNN 9.10.2 support matrix](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.10.2/reference/support-matrix.html)
 - [GUI base documentation](https://github.com/jlesage/docker-baseimage-gui)
 
-## Five narrow source changes
+## Six narrow source changes
 
-`scripts/patch-buzz.py` edits the installed pinned wheel in five places:
+`scripts/patch-buzz.py` edits the pinned Buzz and Faster Whisper installations in six places:
 
 1. File Faster Whisper inference: choose supported INT8 precision rather than requesting unsupported FP16 on Pascal.
 2. Recording Faster Whisper inference: same selection. Browser microphone forwarding is still outside this version's scope.
 3. Plugin discovery: disabled plugins do not trigger package installation.
 4. Runtime package installation: plugin dependencies must be included in the image and rebuilt. The explicit `BUZZ_CONTAINER_ALLOW_PACKAGE_INSTALLS=true` override is unsupported for the standard deployment and forfeits the locked-dependency guarantee.
 5. Default export routing: use BUZZ_OUTPUT_DIRECTORY if a task has no explicit output directory. Explicit task destinations retain precedence.
+6. Faster Whisper audio decoding: remove the obsolete metadata_errors keyword that PyAV 19 no longer accepts. The build decodes mono/stereo WAV data and checks resampling, so decoder API changes are exercised without requiring a GPU.
 
 The patch checks that every target appears exactly once before writing anything. If upstream changes, the image build fails until reviewed. Host tests cover CPU/Pascal/modern-GPU compute selection, output precedence, blocked runtime package installation, direct-wheel lock hashes, and atomic failure on upstream drift. Full-window and preference tests run inside the image build. No other upstream application source is intentionally changed.
 
