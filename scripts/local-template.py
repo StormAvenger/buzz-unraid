@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Generate an Unraid template for an image built locally instead of GHCR."""
 import argparse
 from pathlib import Path

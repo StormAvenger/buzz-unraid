@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Verify real CUDA work. Add --transcribe /input/sample.wav for an inference test."""
 import argparse
 import os

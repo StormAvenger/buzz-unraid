@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 # Disposable CPU/browser integration test for a built Linux image.
 set -eu
 buzz_image=${1:-buzz-unraid:0.1.0-dev}

@@ -115,6 +115,6 @@ For upgrades, stop the container, back up appdata, and retain the previous image
 
 ## License
 
-Copyright (C) 2026 StormAvenger. Container-specific code and original assets are licensed under the [GNU General Public License, version 3 only](LICENSE) (`GPL-3.0-only`), without warranty.
+Container-specific code and original assets are licensed under the [MIT License](LICENSE).
 
-Buzz remains MIT licensed, and bundled third-party software retains its respective licenses. See [third-party notices](THIRD_PARTY_NOTICES.md). The complete container is not exclusively licensed under GPL or MIT. Before distributing container images, retain the required notices and provide the corresponding sources required by bundled software licenses.
+Buzz is also MIT licensed. Bundled third-party software retains its respective licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).

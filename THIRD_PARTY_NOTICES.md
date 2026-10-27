@@ -1,6 +1,6 @@
 # Third-party software
 
-Container-specific source, scripts, tests, configuration, original artwork, and documentation are Copyright (C) 2026 StormAvenger and licensed under GPL-3.0-only; see the root LICENSE. This does not replace upstream notices or third-party licenses.
+Container-specific source, scripts, tests, configuration, original artwork, and documentation are Copyright (c) 2026 StormAvenger and licensed under MIT; see the root LICENSE. This does not replace upstream notices or third-party licenses.
 
 This is an unofficial container for Buzz. It is not endorsed by the Buzz maintainers, Unraid, NVIDIA, or the GUI base maintainer.
 

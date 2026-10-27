@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Host-side checks for compatibility changes and container readiness detection."""
 import contextlib
 import importlib.util

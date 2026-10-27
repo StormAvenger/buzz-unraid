@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 set -eu
 mkdir -p /config/cache/buzz/models /config/cache/huggingface /config/cache/torch \
     /config/xdg/state /uploads /output

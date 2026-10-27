@@ -1,5 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 set -eu
 # Set the loader path BEFORE starting Python, including its spawned workers.
 . /opt/buzz/library-paths.sh

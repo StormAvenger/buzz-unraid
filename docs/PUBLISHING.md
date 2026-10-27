@@ -2,11 +2,11 @@
 
 ## Current state
 
-The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under GPL-3.0-only. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
+The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
 
 ## 1. Publish the source repository
 
-Keep the repository public. Include the Dockerfile, complete container-specific source/patches, dependency inputs and locks, tests, GPL license, original Buzz MIT notice, and third-party notices. Do not publish appdata, downloaded models, recordings, credentials, build logs, or machine-specific deployment notes.
+Keep the repository public. Include the Dockerfile, complete container-specific source/patches, dependency inputs and locks, tests, MIT license, original Buzz MIT notice, and third-party notices. Do not publish appdata, downloaded models, recordings, credentials, build logs, or machine-specific deployment notes.
 
 GitHub's **Check container** workflow builds/tests the project on Linux amd64. The first complete hosted build and CPU smoke test passed on October 26, 2026. Keep these checks passing before cutting a release; future dependency updates may change this large ML stack's storage requirements.
 
@@ -22,7 +22,7 @@ Sources: [GHCR authentication and visibility](https://docs.github.com/en/package
 
 ## 3. Finalize the Unraid listing
 
-The repository includes one public Docker app XML at `templates/buzz.xml`, the root `ca_profile.xml`, a GPL root license, original `icon.svg`, and GitHub issue support. The template already has the planned public image, WebUI, read-only source mapping, writable output/upload mappings, NVIDIA settings, and raw TemplateURL. Do not submit while the image is unavailable.
+The repository includes one public Docker app XML at `templates/buzz.xml`, the root `ca_profile.xml`, an MIT root license, original `icon.svg`, and GitHub issue support. The template already has the planned public image, WebUI, read-only source mapping, writable output/upload mappings, NVIDIA settings, and raw TemplateURL. Do not submit while the image is unavailable.
 
 A dedicated Unraid forum support thread is useful for users; add its real URL if one is created. Never invent a thread URL. GitHub Issues is the current planned support destination.
 

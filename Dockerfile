@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0
 FROM ghcr.io/astral-sh/uv:0.13.5 AS uv
 FROM ${GUI_IMAGE} AS common

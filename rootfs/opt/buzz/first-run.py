@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Seed missing preferences without resetting any existing user preferences."""
 import os
 from pathlib import Path

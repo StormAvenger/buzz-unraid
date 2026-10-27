@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Build-time GUI, decoder, and persistence checks; no GPU or downloads needed."""
 import os
 from pathlib import Path

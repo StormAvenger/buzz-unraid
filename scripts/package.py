@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: GPL-3.0-only
+# SPDX-License-Identifier: MIT
 """Create a transfer archive from an explicit source allowlist, excluding local data."""
 from pathlib import Path
 import zipfile
