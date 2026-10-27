@@ -28,8 +28,8 @@
     },
     {
       "component": "fontconfig",
-      "url": "https://distfiles.macports.org/fontconfig/fontconfig-2.15.0.tar.gz",
-      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/fontconfig/build.sh / unchanged release archive mirror"
+      "url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.15.0.tar.xz",
+      "origin": "jlesage/docker-baseimage-gui v4.14.0 / src/fontconfig/build.sh / same release, xz archive"
     },
     {
       "component": "httpd",

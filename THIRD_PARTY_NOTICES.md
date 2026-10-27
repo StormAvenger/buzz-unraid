@@ -14,4 +14,6 @@ This is an unofficial container for Buzz. It is not endorsed by the Buzz maintai
 
 This file is an initial inventory, not a completed redistribution review. Before public distribution, inventory all installed packages and components, preserve required notices, and satisfy applicable source or redistribution obligations. In particular, review the GPL/commercial licensing of PyQt6 and the licenses of bundled FFmpeg/Qt components. Do not label the complete image as exclusively MIT licensed.
 
+Published image releases include `inventory.json`, `source-manifest.json`, `notices.tar.gz`, source archive parts, and checksums as assets on the matching [GitHub release](https://github.com/StormAvenger/buzz-unraid/releases). `SOURCE-README.txt` explains how to extract the source parts. Installed package notices remain in the image, and `/usr/share/buzz-container/SOURCE-LOCATION.txt` identifies the matching release. These records cover dependency versions and notices; they are not a claim that every application feature or GPU has been tested.
+
 Container-specific GPU, export, and plugin dependency changes to Buzz's installed Python files are documented in `docs/MAINTENANCE.md` and reproducibly applied by `scripts/patch-buzz.py`.

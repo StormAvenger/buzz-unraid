@@ -49,7 +49,12 @@ RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh \
     && mkdir -p /input /uploads /output \
     && set-cont-env APP_NAME "Buzz" \
     && set-cont-env APP_VERSION "1.4.5" \
-    && set-cont-env DOCKER_IMAGE_VERSION "${IMAGE_VERSION}"
+    && set-cont-env DOCKER_IMAGE_VERSION "${IMAGE_VERSION}" \
+    && printf '%s\n' \
+        "Sources, notices and package records for this image:" \
+        "https://github.com/StormAvenger/buzz-unraid/releases/tag/v${IMAGE_VERSION}" \
+        "Download SOURCE-README.txt for source archive instructions." \
+        > /usr/share/buzz-container/SOURCE-LOCATION.txt
 # Verify the shipped runtime, without any build-only libraries available.
 RUN QT_QPA_PLATFORM=offscreen BUZZ_DISABLE_TELEMETRY=1 \
     HF_HUB_DISABLE_TELEMETRY=1 /opt/venv/bin/python /opt/buzz/check-install.py
