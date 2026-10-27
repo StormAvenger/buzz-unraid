@@ -6,6 +6,15 @@ The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, acce
 
 **Public image and Community Applications listing are not published yet.** The template targets the planned `ghcr.io/stormavenger/buzz-unraid:latest` image. Until the first image is published, use the local build instructions below. Publishing this source repository does not make a downloadable Docker image available automatically.
 
+## Set up Buzz on Unraid
+
+The NVIDIA Driver plugin must already be installed and working. In the Buzz installation form, choose just two folders:
+
+1. **Input folder:** where your audio and video files are stored.
+2. **Output folder:** where you want transcripts and subtitles saved.
+
+Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settings are prefilled under **Show more settings**, including appdata, browser uploads, GPU selection, and web port **8088**. Change those only if your setup needs it.
+
 ## Use Buzz
 
 1. Start the container and choose **WebUI** from its Unraid icon menu.
@@ -38,7 +47,7 @@ Automatic exports use `/output` unless a task explicitly chooses another destina
 There is no public registry image yet. Build on the Unraid server or another Linux amd64 Docker host.
 
 1. Clone or extract this repository into a dedicated build directory, such as `/mnt/user/appdata/buzz-build/buzz-unraid`. Keep it separate from `/mnt/user/appdata/buzz`, which stores application data.
-2. Create dedicated input, upload, and transcript shares in Unraid, or choose existing folders with the appropriate permissions.
+2. Choose an input folder for recordings and an output folder for transcripts. The remaining folder settings are prefilled.
 3. Build:
 
    ```sh
@@ -57,8 +66,8 @@ There is no public registry image yet. Build on the Unraid server or another Lin
      > /boot/config/plugins/dockerMan/templates-user/my-buzz.xml
    ```
 
-5. Go to **Docker → Add Container → buzz**, review the mappings, and apply. The template uses the locally built image; it is not a Docker Hub image.
-6. Choose **WebUI**. If port 5800 is occupied, change the host port while retaining container port 5800.
+5. Go to **Docker → Add Container → buzz**, choose your **Input folder** and **Output folder**, and click **Apply**. The template uses the locally built image; it is not a Docker Hub image.
+6. Click the Buzz icon and choose **WebUI**. The default web port is **8088**. If another app uses it, expand **Show more settings** and change **Web port**.
 
 The NVIDIA Driver plugin/runtime must already work on Unraid. Host drivers stay on the server; the image supplies user-space CUDA libraries. For one NVIDIA GPU, `NVIDIA_VISIBLE_DEVICES=all` is sufficient. With multiple cards, use the intended GPU UUID from `nvidia-smi -L`.
 
