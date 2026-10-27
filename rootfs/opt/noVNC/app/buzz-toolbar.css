@@ -48,6 +48,12 @@
 .buzz-transfer-mode [data-fmgr-file-action="delete"],
 .buzz-download-mode .fmgr-upload-btn { display: none; }
 .buzz-transfer-mode .buzz-folder-path { display: none !important; }
+.fmgr-dialog .toolbar .fmgr-upload-btn {
+    width: auto;
+    min-width: 150px;
+    white-space: nowrap;
+    font-size: 1rem;
+}
 @media (max-width: 700px) {
     .buzz-toolbar-hint { display: none; }
     #buzz-toolbar { padding: 8px 12px; gap: 10px; }
