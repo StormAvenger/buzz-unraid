@@ -58,7 +58,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p release-output
-          docker run --rm --network none --entrypoint /opt/venv/bin/python \
+          docker run --rm --network none --user "$(id -u):$(id -g)" --entrypoint /opt/venv/bin/python \
             -v "$PWD/scripts/release-inventory.py:/inventory.py:ro" \
             -v "$PWD/release-output:/release-output" \
             "$IMAGE:$VERSION" /inventory.py /release-output
