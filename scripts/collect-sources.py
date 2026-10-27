@@ -65,7 +65,8 @@ def python_source(package):
     name = package["name"]
     version = package["version"].split("+")[0]
     if name.lower().startswith("nvidia-"):
-        return [], {"name": name, "version": package["version"], "source": "NVIDIA proprietary runtime; installed license retained"}
+        return [], {"name": name, "version": package["version"], "source": "NVIDIA runtime component; installed license retained",
+                    "license_expression": package.get("license_expression", ""), "license_summary": package.get("license_summary", [])}
     data = get_json(f"https://pypi.org/pypi/{quote(name)}/{quote(version)}/json")
     sdists = [item for item in data["urls"] if item["packagetype"] == "sdist"]
     if sdists:

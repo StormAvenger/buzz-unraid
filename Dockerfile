@@ -32,7 +32,8 @@ COPY scripts/patch-buzz.py /build/patch-buzz.py
 RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-packages
 # Filter before the runtime COPY so headers never enter a published image layer.
 # cuDNN's redistribution supplement permits its runtime libraries, not headers.
-RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include
+RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include \
+    /opt/venv/lib/python3.12/site-packages/wandb/bin
 FROM common AS runtime
 ARG IMAGE_VERSION=0.1.0-dev
 ARG SOURCE_REVISION=unknown
@@ -73,6 +74,7 @@ ENV PATH="/opt/venv/bin:${PATH}" \
     XDG_STATE_HOME=/config/xdg/state \
     BUZZ_OUTPUT_DIRECTORY=/output \
     BUZZ_DISABLE_TELEMETRY=1 HF_HUB_DISABLE_TELEMETRY=1 \
+    WANDB_MODE=disabled WANDB_DISABLE_GIT=true \
     BUZZ_FORCE_CPU=false BUZZ_REDUCE_GPU_MEMORY=true \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
     QT_X11_NO_MITSHM=1 QT_OPENGL=software PYTHONUNBUFFERED=1

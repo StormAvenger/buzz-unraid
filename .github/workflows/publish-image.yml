@@ -85,12 +85,12 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-records
+          retention-days: 7
           path: |
             release-output/*.json
             release-output/*.txt
             release-output/SHA256SUMS
             release-output/notices.tar.gz
-            release-output/sources.tar.part*
           if-no-files-found: ignore
       - name: Verify the matching GitHub release exists
         if: env.SHOULD_PUBLISH == 'true'

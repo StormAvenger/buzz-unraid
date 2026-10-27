@@ -25,3 +25,7 @@ CUDA's distribution grant and Attachment A identify runtime components that can 
 The [cuDNN 9.10.2 supplement](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.10.2/reference/eula.html) identifies runtime `.so`/`.dll` files for redistribution. Its development headers are removed in the builder before copying the environment into the runtime stage, so they never enter a published image layer. The runtime libraries and license files are retained. The [cuSPARSELt supplement](https://docs.nvidia.com/cuda/cusparselt/license.html) separately permits its runtime `.so` and `.h` files.
 
 These records describe the release packaging and component terms. Model weights downloaded later have their own licenses. Redistributors must preserve the notices and source availability for the versions they offer, and review changed vendor terms when updating dependencies.
+
+## Omitted development and tracking files
+
+The runtime image omits cuDNN development headers and the W&B package's bundled experiment-tracking executables. The W&B Python API and its license remain for upstream imports; tracking stays disabled. These filters run in the builder, so omitted files are absent from every published runtime layer.

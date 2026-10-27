@@ -5,5 +5,5 @@ torchcodec==0.7.0
 # NeMo's old upper bounds retain known vulnerabilities. Use fixed releases;
 # Faster Whisper is the validated default. See docs/MAINTENANCE.md.
 fsspec[http]==2026.6.0
-hydra-core==1.3.6
+hydra-core==1.3.8
 lightning==2.6.6

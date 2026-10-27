@@ -15,6 +15,8 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     os.environ["QT_QPA_PLATFORM"] = "offscreen"
     os.environ["BUZZ_DISABLE_TELEMETRY"] = "1"
     os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+    os.environ["WANDB_MODE"] = "disabled"
+    os.environ["WANDB_DISABLE_GIT"] = "true"
 
     import torch
     import torchaudio
@@ -24,6 +26,11 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import hydra
     import lightning
     import fsspec.implementations.http
+    import wandb
+    assert not (Path(wandb.__file__).parent / "bin/wandb-core").exists()
+    tracking = wandb.init(mode="disabled")
+    assert tracking.disabled, "Experiment tracking must stay disabled"
+    tracking.finish()
     from buzz.widgets.application import Application
     from PyQt6.QtCore import QSettings
     import runpy

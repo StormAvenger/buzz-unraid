@@ -1705,9 +1705,9 @@ hydra-colorlog==1.2.0 \
     --hash=sha256:33d05fc11ca9bc7a5d69cfb3c8fb395a1bc52fa1dfe7aca6a6f5ffb57f6e7c4b \
     --hash=sha256:d44f85008fabd2448c7e3b496c31b44d7610560f6fff74f3673afaa949870899
     # via buzz-captions
-hydra-core==1.3.6 \
-    --hash=sha256:55951f49c7e19c29f4281cce2eeaa6e73ef6c5620093a4efb402a7e4b839fc38 \
-    --hash=sha256:8c4c215b6cfba68e9a4e76f565bd7399fc2a86b93cfe8cb7328b046834dfbee5
+hydra-core==1.3.8 \
+    --hash=sha256:18d5dfb841734a936507e75e7b8390b406ed22494f7fb8b4b7b7c122102de3d5 \
+    --hash=sha256:d5f184c291691cba835c7f04bc4e36270ad88b1d7e394a3712f5af084c30b394
     # via
     #   --override requirements/overrides.in
     #   buzz-captions
