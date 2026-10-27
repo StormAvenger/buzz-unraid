@@ -4,6 +4,8 @@
 
 The browser runs a remote desktop for Buzz, using jlesage/baseimage-gui. We do not maintain a replacement frontend, API, or job database. The base supplies the window manager, web server, file manager, audio bridge, user switching, and startup supervision. The main application runs as USER_ID/GROUP_ID. The base's service supervisor initializes as root; this is not a fully rootless image.
 
+The small Buzz browser toolbar reuses the base's existing file manager and WebSocket service. `scripts/patch-web-ui.py` adds the toolbar assets to the page and extends the pinned file-manager module with an initial folder, a directory-ready event, and a guarded upload method. It validates every patch anchor before writing, so base changes fail the image build instead of silently breaking transfers. Uploads wait for the server to confirm `/uploads`; downloads open `/output`. The existing backend still enforces allowed paths, file permissions, and duplicate-name protection. No additional listening port or file-transfer service is added.
+
 The container provides the virtual display in software. CUDA is used for inference and does not require passing through a physical display, an X socket, or a whole GPU to a VM. No privileged mode or Docker socket is required.
 
 ## Version pins

@@ -42,6 +42,8 @@ LABEL org.opencontainers.image.title="Buzz for Unraid" \
 RUN add-pkg libpython3.12t64 && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /opt/venv /opt/venv
 COPY rootfs/ /
+COPY scripts/patch-web-ui.py /opt/buzz/patch-web-ui.py
+RUN /opt/venv/bin/python /opt/buzz/patch-web-ui.py
 COPY requirements/*.lock /usr/share/buzz-container/
 COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/buzz-container/
 COPY licenses/ /usr/share/buzz-container/licenses/

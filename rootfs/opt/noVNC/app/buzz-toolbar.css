@@ -1,0 +1,60 @@
+/* SPDX-License-Identifier: MIT */
+:root { --buzz-toolbar-height: 64px; }
+#noVNC_container {
+    position: absolute;
+    top: var(--buzz-toolbar-height);
+    height: calc(100% - var(--buzz-toolbar-height));
+}
+#buzz-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 64px;
+    padding: 10px 22px;
+    background: #172b37;
+    border-bottom: 1px solid #35505e;
+    color: #e6f0f5;
+    font: 14px/1.4 system-ui, sans-serif;
+    box-sizing: border-box;
+    touch-action: manipulation;
+}
+.buzz-brand { color: #fff; font-size: 22px; font-weight: 750; text-decoration: none; }
+.buzz-toolbar-hint { color: #b7cbd5; }
+#buzz-toolbar nav { display: flex; gap: 10px; margin-left: auto; }
+#buzz-toolbar button {
+    padding: 9px 14px;
+    min-height: 40px;
+    border: 1px solid #6e929f;
+    border-radius: 7px;
+    background: #234453;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+#buzz-toolbar #buzz-upload { background: #d6edf2; color: #173540; border-color: #d6edf2; }
+#buzz-toolbar button:hover { filter: brightness(1.12); }
+#buzz-toolbar button:focus-visible, .buzz-brand:focus-visible { outline: 3px solid #8ce0ef; outline-offset: 3px; }
+#buzz-toolbar button:disabled { opacity: .5; cursor: wait; }
+#buzz-toolbar i { margin-right: 6px; }
+.buzz-transfer-mode .fmgr-new-folder-btn,
+.buzz-transfer-mode .fmgr-go-up-btn,
+.buzz-transfer-mode [data-fmgr-file-action="rename"],
+.buzz-transfer-mode [data-fmgr-file-action="delete"],
+.buzz-download-mode .fmgr-upload-btn { display: none; }
+.buzz-transfer-mode .buzz-folder-path { display: none !important; }
+@media (max-width: 700px) {
+    .buzz-toolbar-hint { display: none; }
+    #buzz-toolbar { padding: 8px 12px; gap: 10px; }
+    #buzz-toolbar button { padding: 8px 10px; font-size: 13px; }
+}
+@media (max-width: 390px) {
+    #buzz-toolbar { flex-wrap: wrap; }
+    #buzz-toolbar nav { margin-left: 0; width: 100%; }
+    #buzz-toolbar nav button { flex: 1; }
+}

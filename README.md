@@ -19,9 +19,9 @@ Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settin
 
 1. Start the container and choose **WebUI** from its Unraid icon menu.
 2. For existing server recordings, import files from `/input` using Buzz's **+** button.
-3. For laptop files, open the browser sidebar's **File Manager**, enter `/uploads`, and upload a recording. Use Buzz's **+** button to import that file from `/uploads`.
+3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Use Buzz's **+** button to import the uploaded files from `/uploads`.
 4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
-5. TXT, SRT, and VTT automatic exports go to `/output`. Access the mapped share, or use the browser file manager's download button.
+5. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
 
 The first use downloads the chosen model into appdata. Subsequent local transcription can run without a cloud API. Telemetry is disabled. URL downloads and optional API features need their respective network services.
 
