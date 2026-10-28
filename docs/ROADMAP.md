@@ -1,6 +1,6 @@
 # Planned improvements
 
-## Current development: startup and troubleshooting
+## Available in v0.1.2: startup and troubleshooting
 
 - A startup screen waits for the real Buzz window and the browser desktop connection. A delayed or disconnected desktop shows guidance and a connection retry button.
 - A GPU availability indicator checks CUDA computation and Faster Whisper capabilities once per application start. It also distinguishes Buzz's Force CPU setting. This is not live per-job GPU usage tracking.

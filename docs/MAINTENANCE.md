@@ -12,7 +12,7 @@ The container provides the virtual display in software. CUDA is used for inferen
 
 ## Startup status and private diagnostics
 
-The current development version adds a read-only `/buzz-status.json` snapshot to the existing web server, inheriting the desktop's optional authentication. It opens no new listening port. The snapshot is generated from an allowlist, never from raw logs, environment variables, media, file history, or exception strings. The browser constructs the diagnostic download from a second explicit allowlist and does not upload it anywhere.
+v0.1.2 adds a read-only `/buzz-status.json` snapshot to the existing web server, inheriting the desktop's optional authentication. It opens no new listening port. The snapshot is generated from an allowlist, never from raw logs, environment variables, media, file history, or exception strings. The browser constructs the diagnostic download from a second explicit allowlist and does not upload it anywhere.
 
 A retained Qt timer writes a heartbeat only after the actual main window becomes visible and the event loop runs. The status monitor follows that application's process, checks heartbeat freshness, and performs a bounded CUDA/compute-type probe in a separate subprocess once per start. The browser requires both fresh application readiness and its active desktop connection before dismissing the startup screen. A GPU availability result describes compatibility, not which backend an individual job uses. CPU preference changes are picked up from the Qt heartbeat. Reports keep at most 40 status transitions, with relative seconds rather than private application log content.
 

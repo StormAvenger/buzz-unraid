@@ -2,9 +2,9 @@
 
 The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, accessible in a browser, with NVIDIA GPU transcription and persistent storage. This is an unofficial container maintained by StormAvenger.
 
-**Status:** [v0.1.1 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.1). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
+**Status:** [v0.1.2 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.2). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
 
-Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.1` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The listing should appear after the next catalog build publishes.**
+Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.2` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The manual installation below works without a store listing.**
 
 ## Set up Buzz on Unraid
 
@@ -23,6 +23,8 @@ Go to **Docker → Add Container**, select **Buzz-Transcription** from the templ
 
 Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settings are prefilled under **Show more settings**, including appdata, browser uploads, GPU selection, and web port **8088**. Change those only if your setup needs it.
 
+While Buzz opens, a startup screen shows its readiness. If startup or the desktop connection is delayed, it offers guidance and **Retry connection**.
+
 ## Use Buzz
 
 1. Start the container and choose **WebUI** from its Unraid icon menu.
@@ -31,6 +33,8 @@ Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settin
 4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
 5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running.
 6. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
+
+The top bar shows **GPU available**, **CPU mode**, or a GPU-check problem. Click the indicator for an explanation. This checks compatibility, not live GPU use by individual jobs. **Diagnostics** downloads a local JSON report of technical status and recent status events; it excludes raw logs, recordings, transcripts, credentials, private paths, hostnames, IP addresses, and GPU identifiers. Nothing is uploaded automatically.
 
 The first use downloads the chosen model into appdata. Subsequent local transcription can run without a cloud API. Telemetry is disabled. URL downloads and optional API features need their respective network services.
 
