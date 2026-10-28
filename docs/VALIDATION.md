@@ -24,7 +24,7 @@ The [GitHub Linux check](https://github.com/StormAvenger/buzz-unraid/actions/run
 
 The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40604201378) completed the clean-image inventory and matching-source collection: 285 Python packages, 330 Ubuntu packages, and 1,064 source archives with no collection failures. Its Trivy report contained no HIGH or CRITICAL findings; 645 MEDIUM and 32 LOW findings remain visible in the report. This is a point-in-time scan, not a guarantee that the image has no vulnerabilities. The matching [release assets](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0) are public.
 
-The official Community Applications scan passed: one valid Docker app, no hard errors or template warnings, and a publicly pullable image. Final submission and approval remain pending.
+The official Community Applications scan passed: one valid Docker app, no hard errors or template warnings, and a publicly pullable image. The submission was sent and auto-approved on October 27, 2026. Catalog visibility awaits the next Community Applications build.
 
 Published image digest for both `:0.1.0` and `:latest`: `sha256:60479faefdfd217d387446d69fbbab997fbf3fda8110626835dd1c2acab3da55`.
 
@@ -36,6 +36,6 @@ An anonymous pull using an empty Docker credential configuration succeeded on th
 - An ordinary source-file transcription through the read-only `/input` mapping (the completed UI transcription used `/uploads`).
 - Database-changing upgrades/rollback and server reboot/autostart behavior.
 - Larger models, other GPUs, speaker identification, speech separation, watched folders, and microphone forwarding.
-- Community Applications acceptance.
+- Community Applications catalog visibility after its next build (submission is approved).
 
 No personal recordings were used for the verified sample. This report describes one working configuration and does not imply all Buzz features or GPU families have been tested.

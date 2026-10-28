@@ -4,11 +4,11 @@ The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, acce
 
 **Status:** [v0.1.0 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
 
-Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.0` (fixed version). No registry login is required. **The Community Applications listing is awaiting submission and approval.**
+Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.0` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The listing should appear after the next catalog build publishes.**
 
 ## Set up Buzz on Unraid
 
-The NVIDIA Driver plugin must already be installed and working. Until the Apps listing is approved, install the template with these commands in Unraid's Terminal:
+The NVIDIA Driver plugin must already be installed and working. Once the catalog updates, search for **buzz** in Unraid's **Apps** tab. If the listing has not appeared yet, install the template with these commands in Unraid's Terminal:
 
 ```sh
 mkdir -p /boot/config/plugins/dockerMan/templates-user

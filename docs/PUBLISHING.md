@@ -4,7 +4,7 @@
 
 The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. [v0.1.0](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0) publishes the image as `ghcr.io/stormavenger/buzz-unraid:0.1.0` and `:latest`, with inventory, notices, scan results, matching sources, and checksums attached to the release. The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40604201378) passed all gates.
 
-The official Community Applications scan found one valid Docker app, no hard errors, no template warnings, no starter placeholders, and a publicly pullable image. The final submission is prepared but has not been sent or approved. The repository owner must review the linked forum profile and accept Unraid's applicable terms at submission.
+The official Community Applications scan found one valid Docker app, no hard errors, no template warnings, no starter placeholders, and a publicly pullable image. The submission was sent and auto-approved on October 27, 2026 as a non-duplicated Docker app. The portal says the app should appear after the next Community Applications catalog build publishes; catalog visibility has not yet been verified.
 
 ## 1. Publish the source repository
 
