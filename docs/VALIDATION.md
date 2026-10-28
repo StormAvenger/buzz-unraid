@@ -50,6 +50,8 @@ Runtime commit `55657a92003ffc0f096f72cdb7446a0886cabea9` passed the [Linux buil
 
 A disposable Unraid container built over v0.1.1 with the new status code and original pinned GUI assets showed the startup screen and then the live Buzz desktop. The GTX 1080 passed the new small CUDA computation and Faster Whisper capability probe, and the toolbar displayed GPU available. A browser diagnostic download contained only the declared version/status/event schema. A simulated paused application event loop triggered delayed-start guidance and the retry button; retry reconnected the browser, and the screen recovered automatically after the application resumed. No personal recordings, production appdata, or production container were used for these tests.
 
+The follow-up runtime commit `77aa07c1304ff551973d6f8b7b702a9c4f359c55` passed the [Linux build and container checks](https://github.com/StormAvenger/buzz-unraid/actions/runs/40698697050). It moves both status files to `/dev/shm/buzz-status` and suppresses access-log entries for status polls. The smoke test confirms both files reside on the shared-memory tmpfs and the status endpoint still works. The manual publication default is now `0.1.2`; no new version has been tagged or published by these development checks.
+
 ## Still unverified or unpublished
 
 - Browser media playback.
