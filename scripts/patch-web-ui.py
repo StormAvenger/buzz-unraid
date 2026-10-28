@@ -16,7 +16,6 @@ PATCHES = (
         alias /tmp/buzz-status/public.json;
         default_type application/json;
         add_header Cache-Control "no-store" always;
-        limit_except GET { deny all; }
     }"""),
     ("index.html", "<body>", """<body>
     <section id="buzz-startup" role="status" aria-live="polite">

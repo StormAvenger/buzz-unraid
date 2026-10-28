@@ -71,6 +71,11 @@
     white-space: nowrap;
     font-size: 1rem;
 }
+@media (max-width: 1000px) {
+    #buzz-toolbar { flex-wrap: wrap; }
+    #buzz-toolbar nav { margin-left: 0; width: 100%; }
+    .buzz-gpu { margin-left: auto; }
+}
 @media (max-width: 700px) {
     .buzz-toolbar-hint { display: none; }
     #buzz-toolbar { padding: 8px 12px; gap: 10px; flex-wrap: wrap; }
