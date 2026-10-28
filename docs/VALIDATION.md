@@ -44,6 +44,12 @@ Published v0.1.1 and stable `:latest` image digest: `sha256:4b5920b92d4b1b1ba770
 
 An anonymous pull with an empty Docker credential configuration succeeded on Unraid and matched that digest. The exact published image passed CUDA computation and offline Faster Whisper Small transcription of a public speech sample on the GTX 1080. A separate disposable container became healthy, reported version `0.1.1` and the release commit, and passed the Chrome live-recording-to-main-page button check with fresh application data. Both test containers were removed after verification. The production application was not reinstalled; installation is left to the user.
 
+## Startup and diagnostics development checks
+
+Runtime commit `55657a92003ffc0f096f72cdb7446a0886cabea9` passed the [Linux build and container checks](https://github.com/StormAvenger/buzz-unraid/actions/runs/40696129809): source/privacy checks, 20 Python tests, two JavaScript diagnostic-schema tests, Compose validation, build-context exclusion, actual Qt readiness, and HTTP/storage/restart smoke checks. This is development work for the next release; the stable image remains v0.1.1 until a separate publication workflow completes.
+
+A disposable Unraid container built over v0.1.1 with the new status code and original pinned GUI assets showed the startup screen and then the live Buzz desktop. The GTX 1080 passed the new small CUDA computation and Faster Whisper capability probe, and the toolbar displayed GPU available. A browser diagnostic download contained only the declared version/status/event schema. A simulated paused application event loop triggered delayed-start guidance and the retry button; retry reconnected the browser, and the screen recovered automatically after the application resumed. No personal recordings, production appdata, or production container were used for these tests.
+
 ## Still unverified or unpublished
 
 - Browser media playback.
