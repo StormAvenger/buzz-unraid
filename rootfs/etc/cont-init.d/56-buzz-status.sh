@@ -1,7 +1,7 @@
 #!/bin/sh
 # SPDX-License-Identifier: MIT
 set -eu
-mkdir -p /tmp/buzz-status
-chown "${USER_ID}:${GROUP_ID}" /tmp/buzz-status
-chmod 755 /tmp/buzz-status
-rm -f /tmp/buzz-status/heartbeat.json /tmp/buzz-status/public.json
+mkdir -p /dev/shm/buzz-status
+chown "${USER_ID}:${GROUP_ID}" /dev/shm/buzz-status
+chmod 755 /dev/shm/buzz-status
+rm -f /dev/shm/buzz-status/heartbeat.json /dev/shm/buzz-status/public.json

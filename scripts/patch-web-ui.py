@@ -13,7 +13,7 @@ PATCHES = (
     ("../base/etc/nginx/default_site.conf", "\troot /opt/noVNC;", """\troot /opt/noVNC;
     # Same authentication as the desktop. Only this allowlisted snapshot is public.
     location = /buzz-status.json {
-        alias /tmp/buzz-status/public.json;
+        alias /dev/shm/buzz-status/public.json;
         default_type application/json;
         add_header Cache-Control "no-store" always;
     }"""),

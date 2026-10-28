@@ -61,7 +61,7 @@ class ObservabilityTests(unittest.TestCase):
             server = (root / '../base/etc/nginx/default_site.conf').read_text()
             self.assertIn('location = /buzz-status.json', server)
             self.assertNotIn('auth_request off', server)
-            self.assertIn('alias /tmp/buzz-status/public.json;', server)
+            self.assertIn('alias /dev/shm/buzz-status/public.json;', server)
             before = {p: p.read_bytes() for p in Path(directory).rglob('*') if p.is_file()}
             with self.assertRaises(ValueError):
                 web.patch(root)

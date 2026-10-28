@@ -25,7 +25,12 @@ while [ "$buzz_attempt" -lt 60 ]; do
     if [ "$buzz_status" = healthy ]; then
         docker exec "$buzz_name" python -c '
 import json
+from pathlib import Path
 from urllib.request import urlopen
+mounts = [line.split() for line in Path("/proc/self/mountinfo").read_text().splitlines()]
+assert any(parts[4] == "/dev/shm" and parts[parts.index("-") + 1] == "tmpfs" for parts in mounts)
+assert (Path("/dev/shm/buzz-status/heartbeat.json").stat().st_dev == Path("/dev/shm").stat().st_dev)
+assert (Path("/dev/shm/buzz-status/public.json").stat().st_dev == Path("/dev/shm").stat().st_dev)
 with urlopen("http://127.0.0.1:5800/buzz-status.json") as response:
     assert "no-store" in response.headers["Cache-Control"]
     report = json.load(response)

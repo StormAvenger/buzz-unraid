@@ -8,7 +8,8 @@ import subprocess
 import sys
 import time
 
-STATE = Path('/tmp/buzz-status')
+# Docker supplies /dev/shm as tmpfs: frequent heartbeats stay off docker.img.
+STATE = Path('/dev/shm/buzz-status')
 GPU_CODES = {'checking', 'available', 'unavailable', 'failed', 'timeout', 'cpu'}
 
 
