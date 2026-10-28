@@ -197,12 +197,7 @@ def layer_proof(args):
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, target)
             shutil.copymode(source, target)
-        css = context / 'rootfs/opt/buzz/toolbar.css'
-        if not css.exists():
-            candidates = list((context / 'rootfs').rglob('*.css'))
-            if len(candidates) != 1:
-                raise ValueError('Choose the toolbar stylesheet explicitly')
-            css = candidates[0]
+        css = context / 'rootfs/opt/noVNC/app/buzz-toolbar.css'
         css.write_text(css.read_text() + '\n/* Disposable layer reuse verification. */\n')
         command = ['docker', 'build', '--platform', 'linux/amd64', '-t', 'buzz-unraid:layer-proof']
         labels = first['Config']['Labels']

@@ -13,3 +13,4 @@
 **/.DS_Store
 **/*.local.md
 **/release-output
+**/dependency-output

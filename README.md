@@ -117,6 +117,7 @@ The image pins PyTorch 2.8.0 CUDA 12.6 because newer CUDA builds can omit Pascal
 ```sh
 cp .env.example .env
 # Edit the folder paths and GPU selection in .env.
+python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
 docker compose -f compose.yaml -f compose.nvidia.yaml up -d --no-build
 ```
 
