@@ -2,9 +2,9 @@
 
 The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, accessible in a browser, with NVIDIA GPU transcription and persistent storage. This is an unofficial container maintained by StormAvenger.
 
-**Status:** [v0.1.0 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
+**Status:** [v0.1.1 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.1). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
 
-Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.0` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The listing should appear after the next catalog build publishes.**
+Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.1` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The listing should appear after the next catalog build publishes.**
 
 ## Set up Buzz on Unraid
 
@@ -29,7 +29,7 @@ Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settin
 2. For existing server recordings, import files from `/input` using Buzz's **+** button.
 3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Use Buzz's **+** button to import the uploaded files from `/uploads`.
 4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
-5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running. Available starting with v0.1.1.
+5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running.
 6. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
 
 The first use downloads the chosen model into appdata. Subsequent local transcription can run without a cloud API. Telemetry is disabled. URL downloads and optional API features need their respective network services.

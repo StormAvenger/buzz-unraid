@@ -26,9 +26,23 @@ The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/r
 
 The official Community Applications scan passed: one valid Docker app, no hard errors or template warnings, and a publicly pullable image. The submission was sent and auto-approved on October 27, 2026. Catalog visibility awaits the next Community Applications build.
 
-Published image digest for both `:0.1.0` and `:latest`: `sha256:60479faefdfd217d387446d69fbbab997fbf3fda8110626835dd1c2acab3da55`.
+v0.1.0 image digest (the initial stable release): `sha256:60479faefdfd217d387446d69fbbab997fbf3fda8110626835dd1c2acab3da55`.
 
 An anonymous pull using an empty Docker credential configuration succeeded on the Unraid server and matched that digest. The exact published image passed CUDA computation and offline Faster Whisper Small inference on the GTX 1080. The existing installation was switched to the public stable tag with its original storage mappings; it became healthy and the browser desktop retained its saved history. Unraid's Auto Update Applications plugin recognizes the public image and retains the selected-container update schedule.
+
+## v0.1.1 navigation update
+
+Release commit `3dd353e8b0afe180e0daab72e8daca8cc7d6089f` passed the [Linux build and browser/persistence check](https://github.com/StormAvenger/buzz-unraid/actions/runs/40634485673). The build exercises the real live-recording window with no microphone, uses the application shortcut from text-field focus, repeats the return, and verifies the same main-window and database objects remain open. The 16 host tests and JavaScript syntax check also passed.
+
+Chrome testing opened Live Recording and returned to the main file list using **Back to main page** in the top bar, including repeated use. Testing used a disposable desktop with fresh application data. No personal recordings were used, and this release does not add browser microphone forwarding.
+
+The [v0.1.1 publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40635167113) repeats the image build, runtime checks, clean-image inventory, scan gate, and matching-source collection before publication. The CUDA/PyTorch dependency versions are unchanged.
+
+The v0.1.1 release scan reports zero HIGH or CRITICAL findings, with 645 MEDIUM and 32 LOW findings retained in the report. Matching-source collection completed with 1,064 archives and no failures. The image labels identify version `0.1.1` and the tested commit above. Reports and sources are attached to the [matching release](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.1).
+
+Published v0.1.1 and stable `:latest` image digest: `sha256:4b5920b92d4b1b1ba770f5916a5a96ef2716864d6d9857fa4aa454e0a5b5b0af`.
+
+An anonymous pull with an empty Docker credential configuration succeeded on Unraid and matched that digest. The exact published image passed CUDA computation and offline Faster Whisper Small transcription of a public speech sample on the GTX 1080. A separate disposable container became healthy, reported version `0.1.1` and the release commit, and passed the Chrome live-recording-to-main-page button check with fresh application data. Both test containers were removed after verification. The production application was not reinstalled; installation is left to the user.
 
 ## Still unverified or unpublished
 
