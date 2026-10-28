@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <CommunityApplications>
-  <Profile>StormAvenger maintains this unofficial Buzz container for Unraid, providing browser access to the desktop application and NVIDIA transcription with persistent storage. Source, installation instructions, tested hardware, and issue support are available in the linked GitHub repository.</Profile>
+  <Profile>StormAvenger maintains Buzz-Transcription, an unofficial Buzz container for Unraid, providing browser access to the desktop application and NVIDIA transcription with persistent storage. Source, installation instructions, tested hardware, and issue support are available in the linked GitHub repository.</Profile>
   <Icon>https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/icon.svg</Icon>
   <WebPage>https://github.com/StormAvenger/buzz-unraid</WebPage>
 </CommunityApplications>

@@ -1,4 +1,4 @@
-# Buzz for Unraid
+# Buzz Transcription for Unraid
 
 The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, accessible in a browser, with NVIDIA GPU transcription and persistent storage. This is an unofficial container maintained by StormAvenger.
 
@@ -8,15 +8,15 @@ Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `gh
 
 ## Set up Buzz on Unraid
 
-The NVIDIA Driver plugin must already be installed and working. Once the catalog updates, search for **buzz** in Unraid's **Apps** tab. If the listing has not appeared yet, install the template with these commands in Unraid's Terminal:
+The NVIDIA Driver plugin must already be installed and working. Once the catalog updates, search for **Buzz-Transcription** in Unraid's **Apps** tab. If the listing has not appeared yet, install the template with these commands in Unraid's Terminal:
 
 ```sh
 mkdir -p /boot/config/plugins/dockerMan/templates-user
-curl --fail --location --output /boot/config/plugins/dockerMan/templates-user/my-buzz.xml \
+curl --fail --location --output /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml \
   https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/templates/buzz.xml
 ```
 
-Go to **Docker → Add Container**, select **buzz** from the templates, and choose just two folders:
+Go to **Docker → Add Container**, select **Buzz-Transcription** from the templates, and choose just two folders:
 
 1. **Input folder:** where your audio and video files are stored.
 2. **Output folder:** where you want transcripts and subtitles saved.
@@ -41,7 +41,7 @@ This is a single-user desktop session: browser connections share one Buzz applic
 
 | Container folder | Default Unraid folder | Access | Purpose |
 |---|---|---|---|
-| `/config` | `/mnt/user/appdata/buzz` | Read/write | Settings, history, model downloads and caches |
+| `/config` | `/mnt/user/appdata/buzz-transcription` | Read/write | Settings, history, model downloads and caches |
 | `/input` | `/mnt/user/transcription-input` | Read-only | Existing recordings |
 | `/uploads` | `/mnt/user/transcription-uploads` | Read/write | Browser uploads |
 | `/output` | `/mnt/user/transcriptions` | Read/write | Transcripts and subtitles |
@@ -50,11 +50,13 @@ The browser file manager is limited to the three media folders. Buzz can see the
 
 Automatic exports use `/output` unless a task explicitly chooses another destination. In manual Save/Export dialogs, select `/output`. Buzz's watched-folder mode moves or deletes sources, so it is not configured for read-only `/input`.
 
+Existing installations retain their saved name and appdata mapping. New installs use the distinct name and `/mnt/user/appdata/buzz-transcription` folder to avoid overlap with the unrelated Buzz collaboration app. Before installing both apps on the same server, rename any existing transcription container to `Buzz-Transcription` and give each app its own non-overlapping appdata folder.
+
 ## Build and install locally on Unraid
 
 For development or a custom build, use the Unraid server or another Linux amd64 Docker host. Normal installations can use the published image above.
 
-1. Clone or extract this repository into a dedicated build directory, such as `/mnt/user/appdata/buzz-build/buzz-unraid`. Keep it separate from `/mnt/user/appdata/buzz`, which stores application data.
+1. Clone or extract this repository into a dedicated build directory, such as `/mnt/user/appdata/buzz-build/buzz-unraid`. Keep it separate from `/mnt/user/appdata/buzz-transcription`, which stores application data.
 2. Choose an input folder for recordings and an output folder for transcripts. The remaining folder settings are prefilled.
 3. Build:
 
@@ -71,10 +73,10 @@ For development or a custom build, use the Unraid server or another Linux amd64 
    docker run --rm --entrypoint /opt/venv/bin/python \
      -v "$PWD:/source:ro" buzz-unraid:0.1.0-dev \
      /source/scripts/local-template.py \
-     > /boot/config/plugins/dockerMan/templates-user/my-buzz.xml
+     > /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml
    ```
 
-5. Go to **Docker → Add Container → buzz**, choose your **Input folder** and **Output folder**, and click **Apply**. The template uses the locally built image; it is not a Docker Hub image.
+5. Go to **Docker → Add Container → Buzz-Transcription**, choose your **Input folder** and **Output folder**, and click **Apply**. The template uses the locally built image; it is not a Docker Hub image.
 6. Click the Buzz icon and choose **WebUI**. The default web port is **8088**. If another app uses it, expand **Show more settings** and change **Web port**.
 
 The NVIDIA Driver plugin/runtime must already work on Unraid. Host drivers stay on the server; the image supplies user-space CUDA libraries. For one NVIDIA GPU, `NVIDIA_VISIBLE_DEVICES=all` is sufficient. With multiple cards, use the intended GPU UUID from `nvidia-smi -L`.
@@ -83,7 +85,7 @@ Unraid's **Autostart** is a separate setting in its Docker page. Enable it there
 
 ## Updates
 
-Use `ghcr.io/stormavenger/buzz-unraid:latest` to receive stable releases through Unraid's Docker update checks. For automatic installation, enable Buzz in the **Auto Update Applications** plugin and choose a schedule. GitHub builds, checks, and publishes the image when a stable release is published; Unraid downloads that image from GHCR.
+Use `ghcr.io/stormavenger/buzz-unraid:latest` to receive stable releases through Unraid's Docker update checks. For automatic installation, enable your Buzz-Transcription container in the **Auto Update Applications** plugin and choose a schedule. GitHub builds, checks, and publishes the image when a stable release is published; Unraid downloads that image from GHCR.
 
 Back up appdata before upgrading. Keep the previous version tag and its matching backup for rollback. Selecting a fixed tag such as `:0.1.0` keeps that version until you change it.
 

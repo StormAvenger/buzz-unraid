@@ -6,6 +6,8 @@ The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAveng
 
 The official Community Applications scan found one valid Docker app, no hard errors, no template warnings, no starter placeholders, and a publicly pullable image. The submission was sent and auto-approved on October 27, 2026 as a non-duplicated Docker app. The portal says the app should appear after the next Community Applications catalog build publishes; catalog visibility has not yet been verified.
 
+The template now uses **Buzz-Transcription** with dedicated default appdata at `/mnt/user/appdata/buzz-transcription`, avoiding the unrelated Buzz collaboration app. The image tags and template URL are unchanged; existing installations retain their saved data mappings.
+
 ## 1. Publish the source repository
 
 Keep the repository public. Include the Dockerfile, complete container-specific source/patches, dependency inputs and locks, tests, MIT license, original Buzz MIT notice, and third-party notices. Do not publish appdata, downloaded models, recordings, credentials, build logs, or machine-specific deployment notes.

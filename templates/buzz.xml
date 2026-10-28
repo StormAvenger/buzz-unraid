@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Container version="2">
-  <Name>buzz</Name>
+  <Name>Buzz-Transcription</Name>
   <Repository>ghcr.io/stormavenger/buzz-unraid:latest</Repository>
   <Registry>https://github.com/StormAvenger/buzz-unraid/pkgs/container/buzz-unraid</Registry>
   <Network>bridge</Network>
@@ -20,7 +20,7 @@
   <CPUset />
   <DateInstalled />
   <Config Name="Web port" Target="5800" Default="8088" Mode="tcp" Description="The browser port is prefilled. Change it only if another app uses it." Type="Port" Display="advanced" Required="true" Mask="false">8088</Config>
-  <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/buzz" Mode="rw" Description="Stores settings, history, and downloaded models. The default is ready to use." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/buzz</Config>
+  <Config Name="Appdata" Target="/config" Default="/mnt/user/appdata/buzz-transcription" Mode="rw" Description="Stores settings, history, and downloaded models in a dedicated folder. Existing installations should keep their current mapping." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/appdata/buzz-transcription</Config>
   <Config Name="Input folder" Target="/input" Default="/mnt/user/transcription-input" Mode="ro" Description="Choose the folder containing your audio or video files. In Buzz, click + and open /input. Originals stay unchanged." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcription-input</Config>
   <Config Name="Browser uploads" Target="/uploads" Default="/mnt/user/transcription-uploads" Mode="rw" Description="Stores files sent with the Upload files button. The default is ready to use." Type="Path" Display="advanced" Required="true" Mask="false">/mnt/user/transcription-uploads</Config>
   <Config Name="Output folder" Target="/output" Default="/mnt/user/transcriptions" Mode="rw" Description="Choose where Buzz saves transcripts and subtitles. Buzz saves them here automatically." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/transcriptions</Config>
