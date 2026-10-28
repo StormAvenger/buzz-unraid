@@ -29,6 +29,8 @@ Read this file first. Keep changes small enough to review as a diff.
 
 ## Branch and review workflow
 
+Never use [skip ci] on PR branches; required checks must run.
+
 1. Check `git status`; preserve unrelated work. Create a `codex/` branch from the intended base before editing.
 2. Make one phase per PR. Run applicable checks and describe the concrete problem, behavior, validation and limitations in its body.
 3. Open and attach the PR, give the user its number and review range, and leave it unmerged. Stacked PRs must name their prerequisite and target that branch until it merges.
