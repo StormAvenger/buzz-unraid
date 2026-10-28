@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 # Disposable CPU/browser integration test for a built Linux image.
 set -eu
-buzz_image=${1:-buzz-unraid:0.1.1-dev}
+buzz_image=${1:-buzz-unraid:0.1.2-dev}
 buzz_name="buzz-smoke-$$"
 buzz_created=0
 cleanup() {
@@ -23,6 +23,19 @@ buzz_attempt=0
 while [ "$buzz_attempt" -lt 60 ]; do
     buzz_status=$(docker inspect --format '{{.State.Health.Status}}' "$buzz_name")
     if [ "$buzz_status" = healthy ]; then
+        docker exec "$buzz_name" python -c '
+import json
+from urllib.request import urlopen
+with urlopen("http://127.0.0.1:5800/buzz-status.json") as response:
+    assert "no-store" in response.headers["Cache-Control"]
+    report = json.load(response)
+assert report["schema"] == 1 and report["desktop"] == "ready"
+assert set(report) == {"schema", "image_version", "buzz_version", "desktop", "gpu", "cpu_mode", "uptime_seconds", "updated_at", "events"}
+assert report["cpu_mode"] is True
+assert report["gpu"]["state"] in {"checking", "unavailable", "failed", "timeout"}
+with urlopen("http://127.0.0.1:5800/") as response:
+    assert b"buzz-startup" in response.read()
+'
         docker exec --user 99:100 "$buzz_name" python /opt/buzz/check-install.py
         docker exec --user 99:100 "$buzz_name" python -c \
             'from pathlib import Path; [ (Path(p)/"smoke.txt").write_text("persistent") for p in ("/config", "/uploads", "/output") ]'

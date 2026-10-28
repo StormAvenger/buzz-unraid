@@ -47,6 +47,7 @@ jobs:
         run: |
           python3 scripts/check-public-files.py
           python3 -m unittest discover -s tests -v
+          node --test tests/test_status.mjs
           docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
           sh scripts/check-build-context.sh
       - name: Build versioned image

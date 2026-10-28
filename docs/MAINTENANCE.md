@@ -10,6 +10,14 @@ The top-bar **Back to main page** button uses the active noVNC desktop connectio
 
 The container provides the virtual display in software. CUDA is used for inference and does not require passing through a physical display, an X socket, or a whole GPU to a VM. No privileged mode or Docker socket is required.
 
+## Startup status and private diagnostics
+
+The current development version adds a read-only `/buzz-status.json` snapshot to the existing web server, inheriting the desktop's optional authentication. It opens no new listening port. The snapshot is generated from an allowlist, never from raw logs, environment variables, media, file history, or exception strings. The browser constructs the diagnostic download from a second explicit allowlist and does not upload it anywhere.
+
+A retained Qt timer writes a heartbeat only after the actual main window becomes visible and the event loop runs. The status monitor follows that application's process, checks heartbeat freshness, and performs a bounded CUDA/compute-type probe in a separate subprocess once per start. The browser requires both fresh application readiness and its active desktop connection before dismissing the startup screen. A GPU availability result describes compatibility, not which backend an individual job uses. CPU preference changes are picked up from the Qt heartbeat. Reports keep at most 40 status transitions, with relative seconds rather than private application log content.
+
+The Docker healthcheck also requires the real window heartbeat. Build checks exercise the Qt timer, and the disposable smoke test checks the live HTTP snapshot. Host privacy tests inject unexpected fields and raw output to verify they cannot enter the downloaded report. Planned work is tracked in [ROADMAP.md](ROADMAP.md).
+
 ## Version pins
 
 - GUI base: `jlesage/baseimage-gui:ubuntu-24.04-v4.14.0`.

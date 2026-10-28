@@ -48,10 +48,18 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import runpy
 
     assert torch.version.cuda == "12.6", f"Wrong CUDA build: {torch.__version__}"
+    import buzz_observability
+    buzz_observability.STATE = Path(directory) / 'readiness'
+    buzz_observability.STATE.mkdir()
+    os.environ['BUZZ_CONTAINER_READINESS'] = '1'
     app = Application([])
     app.show_main_window()
     app.processEvents()
     assert app.window.isVisible(), "Buzz main window was not created"
+    from PyQt6.QtTest import QTest
+    assert not buzz_observability.ui_ready(os.getpid(), buzz_observability.STATE)[0]
+    QTest.qWait(2200)
+    assert buzz_observability.ui_ready(os.getpid(), buzz_observability.STATE)[0], 'Qt readiness heartbeat missing'
     seed = runpy.run_path("/opt/buzz/first-run.py")["seed"]
     settings = QSettings("Buzz", "")
     seed(settings)

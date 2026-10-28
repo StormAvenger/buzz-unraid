@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--image", default="buzz-unraid:0.1.1-dev")
+    parser.add_argument("--image", default="buzz-unraid:0.1.2-dev")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     tree = ET.parse(root / "templates/buzz.xml")

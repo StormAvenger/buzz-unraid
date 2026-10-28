@@ -6,6 +6,27 @@ import argparse
 
 
 PATCHES = (
+    ("service-worker.js", "    // File-manager downloads are large, one-off GETs; do not cache them.", """    // Status is live data, not an offline shell asset.
+    if (url.pathname.endsWith('/buzz-status.json')) return false;
+
+    // File-manager downloads are large, one-off GETs; do not cache them."""),
+    ("../base/etc/nginx/default_site.conf", "\troot /opt/noVNC;", """\troot /opt/noVNC;
+    # Same authentication as the desktop. Only this allowlisted snapshot is public.
+    location = /buzz-status.json {
+        alias /tmp/buzz-status/public.json;
+        default_type application/json;
+        add_header Cache-Control "no-store" always;
+        limit_except GET { deny all; }
+    }"""),
+    ("index.html", "<body>", """<body>
+    <section id="buzz-startup" role="status" aria-live="polite">
+        <div class="buzz-startup-card">
+            <h1 id="buzz-startup-title">Starting Buzz…</h1>
+            <p id="buzz-startup-message">Preparing your transcription workspace. First startup can take a little longer.</p>
+            <button id="buzz-retry" type="button" hidden>Retry connection</button>
+            <p>You can leave this page open while Buzz starts.</p>
+        </div>
+    </section>"""),
     ("index.html", "</head>", """    <!-- Buzz file-transfer toolbar -->
     <link rel="stylesheet" href="app/buzz-toolbar.css?v=UNIQUE_VERSION">
     <script type="module" src="app/buzz-toolbar.js?v=UNIQUE_VERSION"></script>

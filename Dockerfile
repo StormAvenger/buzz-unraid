@@ -35,7 +35,7 @@ RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-pack
 RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include \
     /opt/venv/lib/python3.12/site-packages/wandb/bin
 FROM common AS runtime
-ARG IMAGE_VERSION=0.1.1-dev
+ARG IMAGE_VERSION=0.1.2-dev
 ARG SOURCE_REVISION=unknown
 LABEL org.opencontainers.image.title="Buzz for Unraid" \
     org.opencontainers.image.source="https://github.com/StormAvenger/buzz-unraid" \
@@ -51,7 +51,8 @@ RUN /opt/venv/bin/python /opt/buzz/patch-web-ui.py
 COPY requirements/*.lock /usr/share/buzz-container/
 COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/buzz-container/
 COPY licenses/ /usr/share/buzz-container/licenses/
-RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh \
+RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh /etc/cont-init.d/56-buzz-status.sh \
+    && printf '%s\n' "${IMAGE_VERSION}" > /usr/share/buzz-container/VERSION \
     && mkdir -p /input /uploads /output \
     && set-cont-env APP_NAME "Buzz" \
     && set-cont-env APP_VERSION "1.4.5" \
@@ -65,6 +66,7 @@ RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh \
 RUN QT_QPA_PLATFORM=offscreen BUZZ_DISABLE_TELEMETRY=1 \
     HF_HUB_DISABLE_TELEMETRY=1 /opt/venv/bin/python /opt/buzz/check-install.py
 ENV PATH="/opt/venv/bin:${PATH}" \
+    PYTHONPATH=/opt/buzz BUZZ_CONTAINER_READINESS=1 \
     USER_ID=99 GROUP_ID=100 UMASK=0002 \
     KEEP_APP_RUNNING=1 WEB_AUDIO=1 WEB_FILE_MANAGER=1 \
     WEB_FILE_MANAGER_ALLOWED_PATHS=/input,/uploads,/output \

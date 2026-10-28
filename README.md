@@ -63,7 +63,7 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    cd /mnt/user/appdata/buzz-build/buzz-unraid
-   docker build --platform linux/amd64 -t buzz-unraid:0.1.1-dev .
+   docker build --platform linux/amd64 -t buzz-unraid:0.1.2-dev .
    ```
 
    The ML dependency stack is substantial. Allow generous Docker storage and time for the first build. The final image build checks that the actual runtime can create Buzz's window, import its decoders, preserve preferences, and route exports correctly.
@@ -72,7 +72,7 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    docker run --rm --entrypoint /opt/venv/bin/python \
-     -v "$PWD:/source:ro" buzz-unraid:0.1.1-dev \
+     -v "$PWD:/source:ro" buzz-unraid:0.1.2-dev \
      /source/scripts/local-template.py \
      > /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml
    ```
@@ -129,8 +129,8 @@ Both target Linux amd64; this is not a native Apple Silicon image.
 ```sh
 python3 -m unittest discover -s tests -v
 docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
-docker build --platform linux/amd64 -t buzz-unraid:0.1.1-dev .
-sh scripts/smoke-test.sh buzz-unraid:0.1.1-dev
+docker build --platform linux/amd64 -t buzz-unraid:0.1.2-dev .
+sh scripts/smoke-test.sh buzz-unraid:0.1.2-dev
 ```
 
 The disposable CPU smoke test checks web readiness, the real application window, write permissions, and restart persistence. It removes only its own test container and anonymous volumes. The normal GitHub workflow builds/tests; it does not publish images. The separate **Publish image** workflow runs on published GitHub releases after the redistribution/source review described in [publishing notes](docs/PUBLISHING.md).

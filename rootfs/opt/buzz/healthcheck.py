@@ -24,6 +24,10 @@ def main():
         except (FileNotFoundError, PermissionError, ProcessLookupError):
             continue
         if any(args[i:i + 2] == [b"-m", b"buzz"] for i in range(len(args) - 1)):
+            if os.getenv('BUZZ_CONTAINER_READINESS') == '1':
+                from buzz_observability import ui_ready
+                if not ui_ready(int(path.parent.name))[0]:
+                    raise RuntimeError('Buzz window is not ready or its event loop is unresponsive')
             return
     raise RuntimeError("Buzz application process is not running")
 

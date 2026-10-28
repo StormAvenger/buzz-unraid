@@ -4,6 +4,7 @@ import FileManager from './fileManager.js';
 // Match index.html's versioned URL so this is the active desktop connection.
 import UI from './ui.js?v=UNIQUE_VERSION';
 import KeyTable from '../core/input/keysym.js';
+import { setupStatus } from './buzz-status.js?v=UNIQUE_VERSION';
 
 const toolbar = document.createElement('header');
 toolbar.id = 'buzz-toolbar';
@@ -24,6 +25,7 @@ toolbar.innerHTML = `
     <input id="buzz-upload-input" type="file" multiple hidden>
     <span id="buzz-transfer-status" role="status" class="visually-hidden">Connecting to file tools</span>`;
 document.body.prepend(toolbar);
+setupStatus(toolbar, UI);
 
 const uploadButton = document.getElementById('buzz-upload');
 const homeButton = document.getElementById('buzz-home');

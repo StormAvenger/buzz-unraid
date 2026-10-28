@@ -53,7 +53,10 @@ PATCHES = (
         "        self._container_home_shortcut.setContext(\n"
         "            Qt.ShortcutContext.ApplicationShortcut)\n"
         "        self._container_home_shortcut.activated.connect(\n"
-        "            self.return_to_main_window)",
+        "            self.return_to_main_window)\n\n"
+        "        if os.getenv(\"BUZZ_CONTAINER_READINESS\") == \"1\":\n"
+        "            from buzz_observability import install_readiness\n"
+        "            install_readiness(self, self.window)",
     ),
     (
         "buzz/widgets/application.py",
