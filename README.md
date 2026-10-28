@@ -29,7 +29,8 @@ Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settin
 2. For existing server recordings, import files from `/input` using Buzz's **+** button.
 3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Use Buzz's **+** button to import the uploaded files from `/uploads`.
 4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
-5. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
+5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running. Available starting with v0.1.1.
+6. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
 
 The first use downloads the chosen model into appdata. Subsequent local transcription can run without a cloud API. Telemetry is disabled. URL downloads and optional API features need their respective network services.
 
@@ -62,7 +63,7 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    cd /mnt/user/appdata/buzz-build/buzz-unraid
-   docker build --platform linux/amd64 -t buzz-unraid:0.1.0-dev .
+   docker build --platform linux/amd64 -t buzz-unraid:0.1.1-dev .
    ```
 
    The ML dependency stack is substantial. Allow generous Docker storage and time for the first build. The final image build checks that the actual runtime can create Buzz's window, import its decoders, preserve preferences, and route exports correctly.
@@ -71,7 +72,7 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    docker run --rm --entrypoint /opt/venv/bin/python \
-     -v "$PWD:/source:ro" buzz-unraid:0.1.0-dev \
+     -v "$PWD:/source:ro" buzz-unraid:0.1.1-dev \
      /source/scripts/local-template.py \
      > /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml
    ```
@@ -128,8 +129,8 @@ Both target Linux amd64; this is not a native Apple Silicon image.
 ```sh
 python3 -m unittest discover -s tests -v
 docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
-docker build --platform linux/amd64 -t buzz-unraid:0.1.0-dev .
-sh scripts/smoke-test.sh buzz-unraid:0.1.0-dev
+docker build --platform linux/amd64 -t buzz-unraid:0.1.1-dev .
+sh scripts/smoke-test.sh buzz-unraid:0.1.1-dev
 ```
 
 The disposable CPU smoke test checks web readiness, the real application window, write permissions, and restart persistence. It removes only its own test container and anonymous volumes. The normal GitHub workflow builds/tests; it does not publish images. The separate **Publish image** workflow runs on published GitHub releases after the redistribution/source review described in [publishing notes](docs/PUBLISHING.md).

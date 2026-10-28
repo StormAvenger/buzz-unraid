@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 # Disposable CPU/browser integration test for a built Linux image.
 set -eu
-buzz_image=${1:-buzz-unraid:0.1.0-dev}
+buzz_image=${1:-buzz-unraid:0.1.1-dev}
 buzz_name="buzz-smoke-$$"
 buzz_created=0
 cleanup() {

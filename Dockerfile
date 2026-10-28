@@ -35,7 +35,7 @@ RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-pack
 RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include \
     /opt/venv/lib/python3.12/site-packages/wandb/bin
 FROM common AS runtime
-ARG IMAGE_VERSION=0.1.0-dev
+ARG IMAGE_VERSION=0.1.1-dev
 ARG SOURCE_REVISION=unknown
 LABEL org.opencontainers.image.title="Buzz for Unraid" \
     org.opencontainers.image.source="https://github.com/StormAvenger/buzz-unraid" \

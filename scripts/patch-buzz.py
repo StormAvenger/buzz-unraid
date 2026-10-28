@@ -44,6 +44,33 @@ PATCHES = (
         'av.open(input_file, mode="r")',
     ),
     (
+        "buzz/widgets/application.py",
+        "        self.window = MainWindow(transcription_service)",
+        "        self.window = MainWindow(transcription_service)\n\n"
+        "        from PyQt6.QtGui import QKeySequence, QShortcut\n"
+        "        self._container_home_shortcut = QShortcut(\n"
+        "            QKeySequence(\"Ctrl+Alt+Home\"), self.window)\n"
+        "        self._container_home_shortcut.setContext(\n"
+        "            Qt.ShortcutContext.ApplicationShortcut)\n"
+        "        self._container_home_shortcut.activated.connect(\n"
+        "            self.return_to_main_window)",
+    ),
+    (
+        "buzz/widgets/application.py",
+        "    def show_main_window(self):",
+        "    def return_to_main_window(self):\n"
+        "        from buzz.widgets.recording_transcriber_widget import RecordingTranscriberWidget\n"
+        "        # Use the recording window's normal stop/cleanup path. File jobs\n"
+        "        # and the main application's database remain in the same process.\n"
+        "        for window in self.topLevelWidgets():\n"
+        "            if isinstance(window, RecordingTranscriberWidget) and window.isVisible():\n"
+        "                window.close()\n"
+        "        self.window.show()\n"
+        "        self.window.raise_()\n"
+        "        self.window.activateWindow()\n\n"
+        "    def show_main_window(self):",
+    ),
+    (
         "buzz/transcriber/transcriber.py",
         'output_directory = output_directory or os.path.dirname(file_path)',
         'output_directory = output_directory or os.getenv("BUZZ_OUTPUT_DIRECTORY") '
@@ -53,14 +80,14 @@ PATCHES = (
 
 
 def patch(root: Path) -> None:
-    changes = []
+    changes = {}
     for relative, old, new in PATCHES:
         path = root / relative
-        source = path.read_text()
+        source = changes.get(path, path.read_text())
         if source.count(old) != 1:
             raise ValueError(f"Expected exactly one patch location in {relative}; review upstream changes")
-        changes.append((path, source.replace(old, new)))
-    for path, source in changes:
+        changes[path] = source.replace(old, new)
+    for path, source in changes.items():
         path.write_text(source)
         print(f"Applied container compatibility change: {path.name}")
 

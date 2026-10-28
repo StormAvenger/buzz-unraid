@@ -6,6 +6,8 @@ The browser runs a remote desktop for Buzz, using jlesage/baseimage-gui. We do n
 
 The small Buzz browser toolbar reuses the base's existing file manager and WebSocket service. `scripts/patch-web-ui.py` adds the toolbar assets to the page and extends the pinned file-manager module with an initial folder, a directory-ready event, and a guarded upload method. It validates every patch anchor before writing, so base changes fail the image build instead of silently breaking transfers. Uploads wait for the server to confirm `/uploads`; downloads open `/output`. The existing backend still enforces allowed paths, file permissions, and duplicate-name protection. No additional listening port or file-transfer service is added.
 
+The top-bar **Back to main page** button uses the active noVNC desktop connection to send Ctrl+Alt+Home. A container-specific application shortcut closes visible live-recording windows through Buzz's normal cleanup path, then raises the existing main window. It does not restart Buzz or change the file-transcription queue/database. The toolbar imports the same versioned UI module as index.html so it shares the active connection. The build exercises actual keyboard navigation out of a live window with no microphone, repeated use, and preservation of the main window/database objects. Browser microphone forwarding remains outside this release.
+
 The container provides the virtual display in software. CUDA is used for inference and does not require passing through a physical display, an X socket, or a whole GPU to a VM. No privileged mode or Docker socket is required.
 
 ## Version pins
@@ -41,9 +43,9 @@ Sources:
 - [cuDNN 9.10.2 support matrix](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.10.2/reference/support-matrix.html)
 - [GUI base documentation](https://github.com/jlesage/docker-baseimage-gui)
 
-## Six narrow source changes
+## Narrow source changes
 
-`scripts/patch-buzz.py` edits the pinned Buzz and Faster Whisper installations in six places:
+`scripts/patch-buzz.py` edits the pinned Buzz and Faster Whisper installations at eight guarded anchors:
 
 1. File Faster Whisper inference: choose supported INT8 precision rather than requesting unsupported FP16 on Pascal.
 2. Recording Faster Whisper inference: same selection. Browser microphone forwarding is still outside this version's scope.
@@ -51,6 +53,8 @@ Sources:
 4. Runtime package installation: plugin dependencies must be included in the image and rebuilt. The explicit `BUZZ_CONTAINER_ALLOW_PACKAGE_INSTALLS=true` override is unsupported for the standard deployment and forfeits the locked-dependency guarantee.
 5. Default export routing: use BUZZ_OUTPUT_DIRECTORY if a task has no explicit output directory. Explicit task destinations retain precedence.
 6. Faster Whisper audio decoding: remove the obsolete metadata_errors keyword that PyAV 19 no longer accepts. The build decodes mono/stereo WAV data and checks resampling, so decoder API changes are exercised without requiring a GPU.
+
+7. Main-page navigation: install an application-wide Ctrl+Alt+Home shortcut and its return handler in Buzz's Application class (two anchors). Live recording uses its existing close/stop cleanup, while the main window and file jobs stay in place.
 
 The patch checks that every target appears exactly once before writing anything. If upstream changes, the image build fails until reviewed. Host tests cover CPU/Pascal/modern-GPU compute selection, output precedence, blocked runtime package installation, direct-wheel lock hashes, and atomic failure on upstream drift. Full-window and preference tests run inside the image build. No other upstream application source is intentionally changed.
 

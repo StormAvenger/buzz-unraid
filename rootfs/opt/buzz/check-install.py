@@ -72,6 +72,36 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
                      language="en", model=preferences.model, output_format=OutputFormat.TXT)
     assert Path(get_output_file_path(**arguments)).parent == Path(os.environ["BUZZ_OUTPUT_DIRECTORY"])
     assert Path(get_output_file_path(**arguments, output_directory="/explicit")).parent == Path("/explicit")
+
+    # Reproduce the stranded live window with no microphone, then exercise the
+    # same application shortcut sent by the browser toolbar (including focus).
+    from unittest.mock import patch
+    from PyQt6.QtCore import Qt
+    from PyQt6.QtTest import QTest
+    from buzz.widgets.recording_transcriber_widget import RecordingTranscriberWidget
+    from buzz.widgets.audio_devices_combo_box import AudioDevicesComboBox
+    original_window, original_db = app.window, app.db
+    with patch.object(AudioDevicesComboBox, "get_audio_devices", return_value=[]), \
+            patch.object(AudioDevicesComboBox, "get_default_device_id", return_value=-1):
+        for _ in range(2):
+            live = RecordingTranscriberWidget(app.window, flags=Qt.WindowType.Window)
+            live.show()
+            live.activateWindow()
+            live.transcription_text_box.setFocus()
+            app.processEvents()
+            assert live.isVisible() and live.selected_device_id == -1
+            QTest.keyClick(live.transcription_text_box, Qt.Key.Key_Home,
+                           Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.AltModifier)
+            app.processEvents()
+            assert not live.isVisible(), "Home shortcut did not leave live recording"
+            assert app.window is original_window and app.db is original_db
+            assert app.window.isVisible(), "Home shortcut did not restore the main page"
+            assert live.recording_amplitude_listener is None
+    # It is also safe to press the button again while already on the main page.
+    QTest.keyClick(app.window, Qt.Key.Key_Home,
+                   Qt.KeyboardModifier.ControlModifier | Qt.KeyboardModifier.AltModifier)
+    app.processEvents()
+    assert app.window is original_window and app.window.isVisible()
     app.window.close()
     app.quit()
-    print("Buzz main window, real audio decoding/resampling, and persistent preferences: passed")
+    print("Buzz main window, live-window return, audio decoding/resampling, and persistent preferences: passed")

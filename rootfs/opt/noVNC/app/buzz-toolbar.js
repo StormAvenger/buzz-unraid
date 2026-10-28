@@ -1,13 +1,19 @@
 // SPDX-License-Identifier: MIT
 // Reuse the base's file manager, transfer progress, and server-side path checks.
 import FileManager from './fileManager.js';
+// Match index.html's versioned URL so this is the active desktop connection.
+import UI from './ui.js?v=UNIQUE_VERSION';
+import KeyTable from '../core/input/keysym.js';
 
 const toolbar = document.createElement('header');
 toolbar.id = 'buzz-toolbar';
 toolbar.innerHTML = `
     <a class="buzz-brand" href="./" aria-label="Buzz home">Buzz</a>
     <span class="buzz-toolbar-hint">Your transcription workspace</span>
-    <nav aria-label="File transfers">
+    <nav aria-label="Workspace controls">
+        <button id="buzz-home" type="button" disabled title="Close live recording and return to the main page">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to main page
+        </button>
         <button id="buzz-upload" type="button" disabled>
             <i class="fas fa-upload" aria-hidden="true"></i> Upload files
         </button>
@@ -20,6 +26,7 @@ toolbar.innerHTML = `
 document.body.prepend(toolbar);
 
 const uploadButton = document.getElementById('buzz-upload');
+const homeButton = document.getElementById('buzz-home');
 const downloadButton = document.getElementById('buzz-download');
 const picker = document.getElementById('buzz-upload-input');
 const status = document.getElementById('buzz-transfer-status');
@@ -41,6 +48,29 @@ const updateReady = () => {
 };
 new MutationObserver(updateReady).observe(sidebarButton, {attributes: true, attributeFilter: ['class']});
 updateReady();
+
+const updateDesktopReady = () => {
+    homeButton.disabled = !UI.connected || !UI.rfb || UI.rfb.viewOnly;
+};
+new MutationObserver(updateDesktopReady).observe(document.documentElement,
+    {attributes: true, attributeFilter: ['class']});
+updateDesktopReady();
+
+homeButton.addEventListener('click', () => {
+    if (!UI.connected || !UI.rfb || UI.rfb.viewOnly) return;
+    const desktop = UI.rfb;
+    // Buzz handles this shortcut itself; no page reload or process restart.
+    try {
+        desktop.sendKey(KeyTable.XK_Control_L, 'ControlLeft', true);
+        desktop.sendKey(KeyTable.XK_Alt_L, 'AltLeft', true);
+        desktop.sendKey(KeyTable.XK_Home, 'Home', true);
+    } finally {
+        desktop.sendKey(KeyTable.XK_Home, 'Home', false);
+        desktop.sendKey(KeyTable.XK_Alt_L, 'AltLeft', false);
+        desktop.sendKey(KeyTable.XK_Control_L, 'ControlLeft', false);
+    }
+    desktop.focus();
+});
 
 // Keep the desktop below the toolbar and resize it on narrow screens as well.
 new ResizeObserver(() => {

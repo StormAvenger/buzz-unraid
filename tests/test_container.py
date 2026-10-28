@@ -30,7 +30,8 @@ class CompatibilityTests(unittest.TestCase):
         for relative, old, _ in compat.PATCHES:
             path = root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(old + "\n")
+            with path.open("a") as stream:
+                stream.write(old + "\n")
 
     def test_upstream_drift_does_not_partially_patch_installation(self):
         with tempfile.TemporaryDirectory() as directory:
