@@ -15,6 +15,7 @@ PATCHES = (
     location = /buzz-status.json {
         alias /dev/shm/buzz-status/public.json;
         default_type application/json;
+        access_log off;
         add_header Cache-Control "no-store" always;
     }"""),
     ("index.html", "<body>", """<body>
