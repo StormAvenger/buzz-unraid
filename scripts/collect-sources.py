@@ -140,7 +140,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("inventory", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--archives", type=Path, default=Path("requirements/source-archives.json"))
+    parser.add_argument("--archives", type=Path, default=Path("requirements/cu126/source-archives.json"))
     args = parser.parse_args()
     inventory = json.loads(args.inventory.read_text())
     expected = {p["name"].lower(): p["version"] for p in inventory["python"]}

@@ -1,54 +1,25 @@
 # syntax=docker/dockerfile:1
 # SPDX-License-Identifier: MIT
-ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0@sha256:8004b5799addeb62e5ce2fed3b611016433faeb4f9d2126956128699b45fa3ee
-FROM ghcr.io/astral-sh/uv:0.13.5@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff AS uv
-FROM ${GUI_IMAGE} AS common
-# The base creates account files at startup; avoid build-time name/group lookup.
-USER 0:0
-RUN add-pkg \
-    ca-certificates openssl libssl3t64 ffmpeg fonts-dejavu-core gettext libasound2t64 \
-    libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
-    libsndfile1 libtbb12 libvulkan1 libxkbcommon-x11-0 libxcb-cursor0 \
-    libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
-    libxcb-render-util0 libxcb-shape0 libxcb-xinerama0 \
-    python3 python3-venv \
-    && rm -rf /var/lib/apt/lists/*
-
-FROM common AS builder
-COPY --from=uv /uv /usr/local/bin/uv
-RUN add-pkg \
-    build-essential python3-dev pkg-config \
-    && rm -rf /var/lib/apt/lists/*
-ENV UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
-RUN uv venv --python /usr/bin/python3 /opt/venv
-COPY requirements/ /build/requirements/
-# diffq's legacy build needs NumPy and Cython in its build environment.
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --python /opt/venv/bin/python --require-hashes \
-        -r /build/requirements/build.lock \
-    && uv pip install --python /opt/venv/bin/python --require-hashes --no-deps \
-        --no-build-isolation-package diffq -r /build/requirements/runtime.lock
-COPY scripts/patch-buzz.py /build/patch-buzz.py
-RUN /opt/venv/bin/python /build/patch-buzz.py /opt/venv/lib/python3.12/site-packages
-# Filter before the runtime COPY so headers never enter a published image layer.
-# cuDNN's redistribution supplement permits its runtime libraries, not headers.
-RUN rm -rf /opt/venv/lib/python3.12/site-packages/nvidia/cudnn/include \
-    /opt/venv/lib/python3.12/site-packages/wandb/bin
-FROM common AS runtime
+# Publication supplies an approved dependency image pinned by digest.
+ARG DEPS_IMAGE
+FROM ${DEPS_IMAGE} AS runtime
 ARG IMAGE_VERSION=0.1.2-dev
 ARG SOURCE_REVISION=unknown
-LABEL org.opencontainers.image.title="Buzz for Unraid" \
+ARG DEPENDENCY_KEY
+ARG DEPENDENCY_SOURCES
+LABEL org.stormavenger.buzz.dependency-key="${DEPENDENCY_KEY}" \
+    org.stormavenger.buzz.dependency-sources="${DEPENDENCY_SOURCES}" \
+    org.opencontainers.image.title="Buzz for Unraid" \
     org.opencontainers.image.source="https://github.com/StormAvenger/buzz-unraid" \
     org.opencontainers.image.revision="${SOURCE_REVISION}" \
     org.opencontainers.image.version="${IMAGE_VERSION}" \
     org.opencontainers.image.description="Unofficial Buzz browser desktop container with NVIDIA transcription"
-# TorchCodec links to the shared Python library; python3 alone does not ship it.
-RUN add-pkg libpython3.12t64 && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /opt/venv /opt/venv
+COPY scripts/patch-buzz.py /opt/buzz/patch-buzz.py
+RUN PYTHONDONTWRITEBYTECODE=1 /opt/venv/bin/python /opt/buzz/patch-buzz.py /opt/venv/lib/python3.12/site-packages
 COPY rootfs/ /
 COPY scripts/patch-web-ui.py /opt/buzz/patch-web-ui.py
 RUN /opt/venv/bin/python /opt/buzz/patch-web-ui.py
-COPY requirements/*.lock /usr/share/buzz-container/
+COPY requirements/cu126/*.lock /usr/share/buzz-container/
 COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/buzz-container/
 COPY licenses/ /usr/share/buzz-container/licenses/
 RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh /etc/cont-init.d/56-buzz-status.sh \
@@ -60,10 +31,11 @@ RUN chmod +x /startapp.sh /etc/cont-init.d/55-buzz-storage.sh /etc/cont-init.d/5
     && printf '%s\n' \
         "Sources, notices and package records for this image:" \
         "https://github.com/StormAvenger/buzz-unraid/releases/tag/v${IMAGE_VERSION}" \
-        "Download SOURCE-README.txt for source archive instructions." \
+        "Dependency sources: ${DEPENDENCY_SOURCES}" \
+        "Application patches and build recipes are in this app release source archive." \
         > /usr/share/buzz-container/SOURCE-LOCATION.txt
 # Verify the shipped runtime, without any build-only libraries available.
-RUN QT_QPA_PLATFORM=offscreen BUZZ_DISABLE_TELEMETRY=1 \
+RUN PYTHONDONTWRITEBYTECODE=1 QT_QPA_PLATFORM=offscreen BUZZ_DISABLE_TELEMETRY=1 \
     HF_HUB_DISABLE_TELEMETRY=1 /opt/venv/bin/python /opt/buzz/check-install.py
 ENV PATH="/opt/venv/bin:${PATH}" \
     PYTHONPATH=/opt/buzz BUZZ_CONTAINER_READINESS=1 \

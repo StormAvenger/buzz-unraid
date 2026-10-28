@@ -20,6 +20,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build-test-publish:
+    if: github.event_name != 'release' || startsWith(github.event.release.tag_name, 'v')
     environment: release
     runs-on: ubuntu-24.04
     timeout-minutes: 120
@@ -51,37 +52,16 @@ jobs:
           node --test tests/test_status.mjs
           docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
           sh scripts/check-build-context.sh
-      - name: Build versioned image
+      - name: Build from approved dependencies pinned by digest
         run: >-
-          docker build --platform linux/amd64
-          --build-arg IMAGE_VERSION="$VERSION"
-          --build-arg SOURCE_REVISION="$GITHUB_SHA"
-          -t "$IMAGE:$VERSION" .
+          python3 scripts/dependency.py build --image "$IMAGE:$VERSION"
+          --version "$VERSION" --revision "$GITHUB_SHA"
       - name: Check browser and persistent storage
         run: sh scripts/smoke-test.sh "$IMAGE:$VERSION"
-      - name: Collect clean-image package inventory and notices
-        shell: bash
-        run: |
-          mkdir -p release-output
-          docker run --rm --network none --user "$(id -u):$(id -g)" --entrypoint /opt/venv/bin/python \
-            -v "$PWD/scripts/release-inventory.py:/inventory.py:ro" \
-            -v "$PWD/release-output:/release-output" \
-            "$IMAGE:$VERSION" /inventory.py /release-output
-          docker image inspect --format '{{json .Config.Labels}}' "$IMAGE:$VERSION" > release-output/image-labels.json
-          docker image inspect --format '{{.Size}}' "$IMAGE:$VERSION" > release-output/image-bytes.txt
-          # Keep the final image; release build caches before downloading sources.
-          docker builder prune --all --force
-      - name: Scan the built image
-        run: |
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock:ro \
-            -v "$PWD/release-output:/reports" \
-            ghcr.io/aquasecurity/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c image \
-            --scanners vuln --format json --output /reports/image-scan.json "$IMAGE:$VERSION"
-      - name: Enforce image scan release gate
-        run: python3 scripts/check-image-scan.py release-output/image-scan.json
-      - name: Collect matching upstream sources and checksums
-        run: python3 scripts/collect-sources.py release-output/inventory.json release-output
+      - name: Inventory and scan the complete app image
+        run: sh scripts/image-records.sh "$IMAGE:$VERSION" release-output
+      - name: Link matching dependency sources and package notices
+        run: python3 scripts/dependency.py link release-output
       - name: Preserve release preparation records
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -106,7 +86,7 @@ jobs:
         run: >-
           gh release upload "$RELEASE_TAG"
           release-output/*.json release-output/*.txt release-output/SHA256SUMS
-          release-output/notices.tar.gz release-output/sources.tar.part*
+          release-output/notices.tar.gz
           --repo "$GITHUB_REPOSITORY" --clobber
       - name: Authenticate to GHCR
         if: env.SHOULD_PUBLISH == 'true'

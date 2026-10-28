@@ -4,6 +4,8 @@ services:
     platform: linux/amd64
     build:
       context: .
+      args:
+        DEPS_IMAGE: "${DEPS_IMAGE:-buzz-unraid-deps:local}"
     ports:
       - "${BIND_ADDRESS:-0.0.0.0}:${WEB_PORT:-5800}:5800"
     environment:

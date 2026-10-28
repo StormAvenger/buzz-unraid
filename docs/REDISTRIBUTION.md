@@ -29,3 +29,7 @@ These records describe the release packaging and component terms. Model weights 
 ## Omitted development and tracking files
 
 The runtime image omits cuDNN development headers and the W&B package's bundled experiment-tracking executables. The W&B Python API and its license remain for upstream imports; tracking stays disabled. These filters run in the builder, so omitted files are absent from every published runtime layer.
+
+## Split-image releases
+
+For the cu126 split workflow, matching upstream source bundles live on the exact dependency release linked by the app release’s `SOURCE-README.txt` and `dependency-image.json`. Each app release still supplies its fresh inventory, notices, scan and checksums, plus the app patches/recipes in its source archive. Keep both releases available. See [DEPENDENCIES.md](DEPENDENCIES.md) for approval, bootstrap and layer verification procedures. Historical releases retain their original bundled sources.

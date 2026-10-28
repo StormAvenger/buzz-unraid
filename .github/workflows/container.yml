@@ -9,7 +9,7 @@ permissions:
 jobs:
   linux-build-and-browser:
     runs-on: ubuntu-24.04
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -24,9 +24,32 @@ jobs:
       - name: Verify private files stay outside the build context
         run: sh scripts/check-build-context.sh
       - name: Build Linux image
-        run: docker build --platform linux/amd64 -t buzz-unraid:ci .
+        run: python3 scripts/dependency.py build --bootstrap --revision "$GITHUB_SHA"
       - name: Check browser and Buzz (CPU)
         run: sh scripts/smoke-test.sh buzz-unraid:ci
+      - name: Prove rootfs-only updates reuse dependency layers
+        run: python3 scripts/dependency.py layer-proof
+      - name: Scan the dependency and app images
+        run: |
+          DEP_IMAGE=$(python3 -c 'import json; print(json.load(open("release-output/dependency-reference.json"))["image"])')
+          sh scripts/image-records.sh "$DEP_IMAGE" dependency-output
+          sh scripts/image-records.sh buzz-unraid:ci release-output
+      - name: Verify sources or prepare unpublished dependency sources
+        run: |
+          python3 scripts/ci-sources.py
+      - name: Preserve layer proof and scan records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dependency-layer-proof
+          retention-days: 7
+          path: |
+            release-output/*.json
+            release-output/*.txt
+            release-output/SHA256SUMS
+            dependency-output/*.json
+            dependency-output/SHA256SUMS
+          if-no-files-found: ignore
       - name: Collect smoke-test logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

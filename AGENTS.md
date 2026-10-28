@@ -4,7 +4,8 @@ Read this file first. Keep changes small enough to review as a diff.
 
 ## Repository map
 
-- `Dockerfile`: pinned Linux amd64 image and runtime checks.
+- `Dockerfile`: app layers and runtime checks; `Dockerfile.deps`: pinned cu126 OS/Python environment.
+- `scripts/dependency.py`, `docs/DEPENDENCIES.md`: input identity, approved digest/source resolution, bootstrap and layer evidence.
 - `requirements/`: exact Python inputs, hash locks, corresponding-source pins.
 - `rootfs/`: app startup/storage, readiness/GPU checks, noVNC toolbar.
 - `scripts/patch-buzz.py`, `scripts/patch-web-ui.py`: guarded upstream changes.
