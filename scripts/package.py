@@ -9,7 +9,7 @@ FILES = (
     "Dockerfile", "README.md", "THIRD_PARTY_NOTICES.md", "compose.yaml",
     "compose.nvidia.yaml", ".env.example", ".dockerignore", ".gitignore",
     ".github/workflows/container.yml", ".github/workflows/publish-image.yml",
-    "LICENSE", "icon.svg", "ca_profile.xml",
+    "LICENSE", "icon.svg", "ca_profile.xml", "AGENTS.md", ".github/PULL_REQUEST_TEMPLATE.md",
 )
 DIRECTORIES = ("rootfs", "scripts", "requirements", "docs", "unraid", "tests", "licenses", "templates")
 
