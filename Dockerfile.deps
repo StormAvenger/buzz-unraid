@@ -5,7 +5,11 @@ FROM ghcr.io/astral-sh/uv:0.13.5@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf56
 FROM ${GUI_IMAGE} AS common
 # The base creates account files at startup; avoid build-time name/group lookup.
 USER 0:0
-RUN add-pkg \
+# A reviewed refresh date invalidates the cached OS upgrade layer.
+COPY requirements/cu126/os-refresh /usr/share/buzz-container/os-refresh
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
+    && add-pkg \
     ca-certificates openssl libssl3t64 ffmpeg fonts-dejavu-core gettext libasound2t64 \
     libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
     libsndfile1 libtbb12 libvulkan1 libxkbcommon-x11-0 libxcb-cursor0 \
@@ -26,7 +30,7 @@ COPY requirements/cu126/ /build/requirements/
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv/bin/python --require-hashes \
         -r /build/requirements/build.lock \
-    && uv pip install --python /opt/venv/bin/python --require-hashes --no-deps \
+    && uv pip install --python /opt/venv/bin/python --require-hashes --no-deps --compile-bytecode \
         --no-build-isolation-package diffq -r /build/requirements/runtime.lock
 # Filter before the runtime COPY so headers never enter a published image layer.
 # cuDNN's redistribution supplement permits its runtime libraries, not headers.
@@ -36,8 +40,6 @@ FROM common AS dependencies
 RUN add-pkg libpython3.12t64 && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /opt/venv /opt/venv
 COPY requirements/cu126/*.lock /usr/share/buzz-container/
-COPY LICENSE THIRD_PARTY_NOTICES.md /usr/share/buzz-container/
-COPY licenses/ /usr/share/buzz-container/licenses/
 ARG DEPENDENCY_KEY
 LABEL org.opencontainers.image.source="https://github.com/StormAvenger/buzz-unraid" \
     org.stormavenger.buzz.dependency-key="${DEPENDENCY_KEY}" \

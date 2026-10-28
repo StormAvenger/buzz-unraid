@@ -28,19 +28,33 @@ class DependencyTests(unittest.TestCase):
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(ROOT / name, target)
-            for directory in ('requirements/cu126', 'licenses'):
+            for directory in ('requirements/cu126',):
                 shutil.copytree(ROOT / directory, root / directory)
             initial = dep.dependency_key(root)
             (root / 'rootfs').mkdir()
             (root / 'rootfs/toolbar.css').write_text('changed')
             (root / 'scripts/patch-buzz.py').write_text('changed')
+            (root / 'LICENSE').write_text('changed app license')
+            (root / 'THIRD_PARTY_NOTICES.md').write_text('changed app notice')
+            (root / 'licenses').mkdir()
+            (root / 'licenses/test.txt').write_text('changed app notice')
             self.assertEqual(initial, dep.dependency_key(root))
-            for name in ('requirements/cu126/runtime.lock', 'Dockerfile.deps'):
+            for name in ('requirements/cu126/runtime.lock', 'Dockerfile.deps', 'requirements/cu126/os-refresh'):
                 path = root / name
                 original = path.read_bytes()
-                path.write_bytes(original + b'\n# input changed\n')
+                path.write_bytes(b'2026-10-29\n' if name.endswith('os-refresh') else original + b'\n# input changed\n')
                 self.assertNotEqual(initial, dep.dependency_key(root))
                 path.write_bytes(original)
+
+    def test_pushed_digest_comes_from_exact_repository_metadata(self):
+        expected = 'sha256:' + 'b' * 64
+        with patch.object(dep, 'inspect', return_value={'RepoDigests': [dep.IMAGE + '@' + expected]}):
+            self.assertEqual(dep.published_digest('local-tag'), expected)
+        for references in ([], [dep.IMAGE + ':latest'], ['example.org/foreign@' + expected],
+                           [dep.IMAGE + '@' + expected, dep.IMAGE + '@sha256:' + 'c' * 64]):
+            with self.subTest(references=references), patch.object(dep, 'inspect', return_value={'RepoDigests': references}):
+                with self.assertRaises(ValueError):
+                    dep.published_digest('local-tag')
 
     def test_mutable_foreign_or_mismatched_records_fail_closed(self):
         record = self.record()

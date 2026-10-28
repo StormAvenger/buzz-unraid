@@ -21,7 +21,7 @@ IMAGE = 'ghcr.io/stormavenger/buzz-unraid-deps'
 API = f'https://api.github.com/repos/{REPO}'
 WEB = f'https://github.com/{REPO}/releases/tag/'
 INPUTS = ('Dockerfile.deps', 'scripts/collect-sources.py',
-          'scripts/release-inventory.py', 'LICENSE', 'THIRD_PARTY_NOTICES.md')
+          'scripts/release-inventory.py')
 
 
 def run(*args, **kwargs):
@@ -29,8 +29,10 @@ def run(*args, **kwargs):
 
 
 def dependency_key(root=ROOT):
+    from datetime import date
+    date.fromisoformat((root / 'requirements/cu126/os-refresh').read_text().strip())
     paths = list(INPUTS)
-    for directory in ('requirements/cu126', 'licenses'):
+    for directory in ('requirements/cu126',):
         paths.extend(str(p.relative_to(root)) for p in (root / directory).rglob('*') if p.is_file())
     digest = hashlib.sha256()
     for name in sorted(paths):
@@ -111,6 +113,16 @@ def approved(key):
 
 def inspect(image):
     return json.loads(run('docker', 'image', 'inspect', image))[0]
+
+
+def published_digest(image):
+    # Docker records the registry-confirmed identity after a successful push.
+    matches = {reference.removeprefix(IMAGE + '@')
+               for reference in inspect(image).get('RepoDigests', [])
+               if re.fullmatch(re.escape(IMAGE) + r'@sha256:[0-9a-f]{64}', reference)}
+    if len(matches) != 1:
+        raise ValueError('Expected one pushed dependency digest in RepoDigests')
+    return matches.pop()
 
 
 def verify_image(record):
@@ -229,6 +241,8 @@ def main():
     commands = parser.add_subparsers(dest='command', required=True)
     commands.add_parser('key')
     commands.add_parser('resolve')
+    digest = commands.add_parser('digest')
+    digest.add_argument('image')
     build_parser = commands.add_parser('build')
     build_parser.add_argument('--bootstrap', action='store_true', help='Allow a local unpublished dependency build in CI/development only')
     build_parser.add_argument('--image', default='buzz-unraid:ci')
@@ -254,6 +268,8 @@ def main():
         record, _ = approved(dependency_key())
         verify_image(record)
         print(json.dumps(record))
+    elif args.command == 'digest':
+        print(published_digest(args.image))
     elif args.command == 'build':
         build(args)
     elif args.command == 'link':

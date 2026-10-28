@@ -30,7 +30,7 @@ The Docker healthcheck also requires the real window heartbeat. Build checks exe
 - Faster Whisper: `1.2.1`; CTranslate2: `4.6.2`; NumPy: `1.26.4`.
 - All Python runtime dependencies are version-and-hash locked for Linux x86_64/glibc 2.39. Build bootstrap dependencies are locked separately.
 
-OS packages still follow Ubuntu security updates when an image is rebuilt. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
+OS packages are refreshed in dependency builds using `apt-get upgrade`; bump the reviewed `requirements/cu126/os-refresh` date to invalidate the cached upgrade layer and dependency key. App-only builds reuse the approved dependency image. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
 
 Regenerate locks with uv 0.13.5 and `sh scripts/lock-dependencies.sh`. Review the changes before rebuilding; no startup-time dependency installs are configured.
 
@@ -82,4 +82,4 @@ First-run seeding uses Buzz's QSettings API, its actual `file_transcriber` prefe
 8. Record image size, disk usage, VRAM, timing, hardware/driver details, and remaining limitations.
 9. Verify bundled third-party licenses/source obligations and image scan results; pin base digests; publish a versioned image only after these gates pass.
 
-The normal GitHub workflow builds and tests only. The Publish image workflow runs on published GitHub releases, builds and smoke-tests, collects clean-image notices/inventory and matching upstream source archives, scans the image, attaches release records, and pushes versioned images to GHCR using the temporary repository token. Ordinary commits do not publish images. Manual dispatch defaults to preparation without publishing. See PUBLISHING.md before the first public image release.
+The normal GitHub workflow builds and tests only. The dependency publisher runs for reviewed dependency inputs on main and requires release-environment approval; it scans both images and collects matching upstream sources once. Publish image runs on app releases, builds from the approved dependency digest, smoke-tests and scans the full app, attaches fresh app inventory/notices and exact dependency-source links, then pushes versioned app images using the temporary repository token. App-only commits do not publish dependency images. Manual dispatch defaults to preparation without publishing. See PUBLISHING.md before the first public image release.

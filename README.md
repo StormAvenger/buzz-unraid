@@ -67,8 +67,11 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    cd /mnt/user/appdata/buzz-build/buzz-unraid
-   python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
+   docker build -f Dockerfile.deps -t buzz-unraid-deps:local .
+   docker build --build-arg DEPS_IMAGE=buzz-unraid-deps:local -t buzz-unraid:0.1.2-dev .
    ```
+
+   These commands need only Docker on Unraid; host Python is not required. The Python helper remains the CI/development path for dependency identity and approved digest handling.
 
    The ML dependency stack is substantial. Allow generous Docker storage and time for the first build. The final image build checks that the actual runtime can create Buzz's window, import its decoders, preserve preferences, and route exports correctly.
 

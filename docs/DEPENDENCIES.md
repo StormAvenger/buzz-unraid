@@ -4,11 +4,11 @@ The dependency image contains Ubuntu packages and the unpatched Python environme
 
 ## Identity and approval
 
-`python3 scripts/dependency.py key` computes a full SHA-256 over named input bytes: `Dockerfile.deps` (including GUI/uv digests), everything under `requirements/cu126/`, licenses/notices, and the source-collection/inventory recipes. Input names and lengths delimit the hash. Changes to rootfs, toolbar or app patches do not affect it. Source recipes are included so changed source obligations cannot silently reuse an old publication.
+`python3 scripts/dependency.py key` computes a full SHA-256 over named input bytes: `Dockerfile.deps` (including GUI/uv digests), everything under `requirements/cu126/` (including the `os-refresh` date), and the source-collection/inventory recipes. Input names and lengths delimit the hash. Changes to rootfs, toolbar, app patches or app license/notice files do not affect it. The app image copies the container license and notices; installed third-party notices remain in the dependency image. Source recipes are included so changed source obligations cannot silently reuse an old publication.
 
 The image tag is `ghcr.io/stormavenger/buzz-unraid-deps:cu126-<key>`. Its source release is `deps-cu126-<key>`, marked as a prerelease so it does not become the latest app release. That release's `dependency-image.json` records the actual pushed immutable `@sha256:` reference. The app publication resolves and checks this record, checksums, matching package inventory and source asset digests, then pulls the image by digest and verifies its key/variant labels. Missing or incomplete records stop publication. A mutable tag is never accepted as a production base.
 
-The dependency workflow only runs on changes to these inputs on main, or manually. Both publication workflows use the `release` environment; the owner must configure themselves as required reviewer. Workflow names alone do not create that protection. There is no scheduled OS upgrade in this phase. Changing repository packages requires an explicitly reviewed dependency recipe/input change; exact installed versions and sources are recorded for each resulting image.
+The dependency workflow only runs on changes to these inputs on main, or manually. Both publication workflows use the `release` environment; the owner must configure themselves as required reviewer. Workflow names alone do not create that protection. There is no scheduled OS upgrade in this phase. To refresh Ubuntu packages, bump `requirements/cu126/os-refresh` to the current ISO date in a reviewed PR. The date changes the key and invalidates the Docker layer before `apt-get update` / `apt-get upgrade`, so existing base packages are upgraded as well as newly installed ones. Exact installed versions and sources are recorded for each resulting image. The runtime Python install precompiles bytecode in the dependency image for startup speed.
 
 ## First publication after review
 
@@ -20,7 +20,7 @@ The dependency workflow only runs on changes to these inputs on main, or manuall
 
 ## Local and PR builds
 
-Run `python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev`. This reuses the approved image if present, or builds a local unpublished dependency image when its release does not exist. This fallback is explicit and is never used by the app publication workflow. Then run Compose with `up -d --no-build`. For raw Compose builds, supply `DEPS_IMAGE` explicitly; the local placeholder is not an approved publication reference.
+On Unraid, use the two plain Docker commands in the README; no host Python is needed. For CI/development hosts with Python, run `python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev`. This reuses the approved image if present, or builds a local unpublished dependency image when its release does not exist. This fallback is explicit and is never used by the app publication workflow. Then run Compose with `up -d --no-build`. For raw Compose builds, supply `DEPS_IMAGE` explicitly; the local placeholder is not an approved publication reference.
 
 PR CI builds without publishing, runs the existing CPU/browser/storage checks, scans both clean images, and verifies sources. New dependency inputs collect sources in CI; app-only changes reuse the approved source records. Inventories and evidence are retained for seven days; multi-GB source bundles are attached once on dependency publication, rather than copied to every app release.
 

@@ -6,9 +6,6 @@ on:
     paths:
       - Dockerfile.deps
       - requirements/cu126/**
-      - licenses/**
-      - LICENSE
-      - THIRD_PARTY_NOTICES.md
       - scripts/collect-sources.py
       - scripts/release-inventory.py
 permissions:
@@ -101,8 +98,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          docker push "$DEP_IMAGE" | tee /tmp/buzz-dependency-push.txt
-          DIGEST=$(sed -n 's/.*digest: \(sha256:[a-f0-9]\{64\}\).*/\1/p' /tmp/buzz-dependency-push.txt)
+          docker push "$DEP_IMAGE"
+          DIGEST=$(python3 scripts/dependency.py digest "$DEP_IMAGE")
           python3 scripts/dependency.py record "$DIGEST" "$GITHUB_SHA" dependency-output/dependency-image.json
           python3 scripts/dependency.py checksums dependency-output
           gh release upload "$TAG" dependency-output/dependency-image.json dependency-output/SHA256SUMS \
