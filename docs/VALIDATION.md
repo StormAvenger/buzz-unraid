@@ -2,14 +2,14 @@
 
 ## Tested configuration
 
-- Unraid 7.3.3; Ryzen 7 1800X (owner-reported).
-- NVIDIA GTX 1080, 8192 MiB; installed driver 580.178.04.
+- Unraid 7.3.4 (initial development tests used 7.3.3); Ryzen 7 1800X.
+- NVIDIA GTX 1080, 8192 MiB, with the Unraid NVIDIA Driver plugin.
 - Buzz 1.4.5; Python 3.12; PyTorch 2.8.0+cu126; Faster Whisper 1.2.1; CTranslate2 4.6.2.
 
 ## Completed
 
 - Host tests cover precision selection, export routing, upstream patch drift, browser/application health, process exit races, Unraid mappings, direct-wheel hash structure, and blocked runtime package installation.
-- All five changes apply to the published Buzz Linux wheel, and modified Python files parse.
+- All six guarded compatibility changes apply to the pinned Buzz/Faster Whisper packages, and modified Python files parse. Mono and stereo WAV decoding/resampling is exercised during the image build.
 - Python/shell syntax and XML/YAML parsing pass. The runtime and build dependency locks include artifact hashes.
 - The Linux image built on the Unraid server. The application check runs in the final runtime stage, including its shared Python library, without build-only libraries available.
 - The disposable CPU smoke test passed: browser readiness, Buzz window creation, writable folders as UID 99/GID 100, and files surviving a restart.
@@ -20,7 +20,15 @@
 - On Unraid 7.3.4, the browser toolbar opened the uploads folder and transcript folder directly. Chrome downloaded a completed TXT transcript successfully. Both a 32 KB WAV and an 8 MiB WAV uploaded through the top-bar picker with matching SHA-256 hashes on the server; progress was visible for the larger upload.
 - Recreating the container with the toolbar image and existing folder mappings preserved the saved transcription history and output files. The replacement container became healthy.
 
-The [GitHub Linux check](https://github.com/StormAvenger/buzz-unraid/actions/runs/40421887408) passed for commit `d0fbdb7e1f926b988ce6557fc25c43e2f233c8a1`, including the repository licensing, artwork, and publication metadata. Source tests, Compose validation, the Linux amd64 image build, and the disposable CPU/browser/persistent-storage smoke test all passed on the hosted Ubuntu runner. GPU inference was verified separately on the Unraid server.
+The [GitHub Linux check](https://github.com/StormAvenger/buzz-unraid/actions/runs/40603537304) passed for release commit `c3cb6ebd072395c236ccf48b3d3e0ff3e2761d48`. All 16 host tests, Docker build-context privacy checks, Compose validation, the Linux amd64 image build, and the disposable CPU/browser/persistent-storage smoke test passed on the hosted Ubuntu runner. GPU inference was verified separately on the Unraid server, using a cached Small model and the public JFK sample with networking disabled.
+
+The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40604201378) completed the clean-image inventory and matching-source collection: 285 Python packages, 330 Ubuntu packages, and 1,064 source archives with no collection failures. Its Trivy report contained no HIGH or CRITICAL findings; 645 MEDIUM and 32 LOW findings remain visible in the report. This is a point-in-time scan, not a guarantee that the image has no vulnerabilities. The matching [release assets](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0) are public.
+
+The official Community Applications scan passed: one valid Docker app, no hard errors or template warnings, and a publicly pullable image. Final submission and approval remain pending.
+
+Published image digest for both `:0.1.0` and `:latest`: `sha256:60479faefdfd217d387446d69fbbab997fbf3fda8110626835dd1c2acab3da55`.
+
+An anonymous pull using an empty Docker credential configuration succeeded on the Unraid server and matched that digest. The exact published image passed CUDA computation and offline Faster Whisper Small inference on the GTX 1080. The existing installation was switched to the public stable tag with its original storage mappings; it became healthy and the browser desktop retained its saved history. Unraid's Auto Update Applications plugin recognizes the public image and retains the selected-container update schedule.
 
 ## Still unverified or unpublished
 
@@ -28,7 +36,6 @@ The [GitHub Linux check](https://github.com/StormAvenger/buzz-unraid/actions/run
 - An ordinary source-file transcription through the read-only `/input` mapping (the completed UI transcription used `/uploads`).
 - Database-changing upgrades/rollback and server reboot/autostart behavior.
 - Larger models, other GPUs, speaker identification, speech separation, watched folders, and microphone forwarding.
-- A complete bundled-license/corresponding-source inventory and container image scan.
-- Public registry image availability and Community Applications acceptance.
+- Community Applications acceptance.
 
 No personal recordings were used for the verified sample. This report describes one working configuration and does not imply all Buzz features or GPU families have been tested.

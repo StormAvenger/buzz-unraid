@@ -12,7 +12,7 @@ This is an unofficial container for Buzz. It is not endorsed by the Buzz maintai
 - CUDA/cuDNN and NVIDIA runtime packages are subject to NVIDIA's applicable license terms.
 - Downloaded model weights are separate artifacts with their own license terms. They are downloaded into appdata rather than included in this image by default.
 
-This file is an initial inventory, not a completed redistribution review. Before public distribution, inventory all installed packages and components, preserve required notices, and satisfy applicable source or redistribution obligations. In particular, review the GPL/commercial licensing of PyQt6 and the licenses of bundled FFmpeg/Qt components. Do not label the complete image as exclusively MIT licensed.
+The v0.1.0 release includes the clean-image package inventory, preserved notices, and matching source archives for redistributed components, including PyQt/Qt and FFmpeg. NVIDIA runtime handling and component-specific redistribution decisions are documented in [docs/REDISTRIBUTION.md](docs/REDISTRIBUTION.md). The complete image contains software under multiple licenses.
 
 Published image releases include `inventory.json`, `source-manifest.json`, `notices.tar.gz`, source archive parts, and checksums as assets on the matching [GitHub release](https://github.com/StormAvenger/buzz-unraid/releases). `SOURCE-README.txt` explains how to extract the source parts. Installed package notices remain in the image, and `/usr/share/buzz-container/SOURCE-LOCATION.txt` identifies the matching release. These records cover dependency versions and notices; they are not a claim that every application feature or GPU has been tested.
 

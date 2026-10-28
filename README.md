@@ -2,13 +2,21 @@
 
 The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, accessible in a browser, with NVIDIA GPU transcription and persistent storage. This is an unofficial container maintained by StormAvenger.
 
-**Status:** the development image has been built and tested on Unraid 7.3.3 with a GTX 1080 8 GB and NVIDIA driver 580.178.04. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small in about 10 seconds, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
+**Status:** [v0.1.0 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
 
-**Public image and Community Applications listing are not published yet.** The template targets the planned `ghcr.io/stormavenger/buzz-unraid:latest` image. Until the first image is published, use the local build instructions below. Publishing this source repository does not make a downloadable Docker image available automatically.
+Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.0` (fixed version). No registry login is required. **The Community Applications listing is awaiting submission and approval.**
 
 ## Set up Buzz on Unraid
 
-The NVIDIA Driver plugin must already be installed and working. In the Buzz installation form, choose just two folders:
+The NVIDIA Driver plugin must already be installed and working. Until the Apps listing is approved, install the template with these commands in Unraid's Terminal:
+
+```sh
+mkdir -p /boot/config/plugins/dockerMan/templates-user
+curl --fail --location --output /boot/config/plugins/dockerMan/templates-user/my-buzz.xml \
+  https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/templates/buzz.xml
+```
+
+Go to **Docker → Add Container**, select **buzz** from the templates, and choose just two folders:
 
 1. **Input folder:** where your audio and video files are stored.
 2. **Output folder:** where you want transcripts and subtitles saved.
@@ -44,7 +52,7 @@ Automatic exports use `/output` unless a task explicitly chooses another destina
 
 ## Build and install locally on Unraid
 
-There is no public registry image yet. Build on the Unraid server or another Linux amd64 Docker host.
+For development or a custom build, use the Unraid server or another Linux amd64 Docker host. Normal installations can use the published image above.
 
 1. Clone or extract this repository into a dedicated build directory, such as `/mnt/user/appdata/buzz-build/buzz-unraid`. Keep it separate from `/mnt/user/appdata/buzz`, which stores application data.
 2. Choose an input folder for recordings and an output folder for transcripts. The remaining folder settings are prefilled.
@@ -72,6 +80,12 @@ There is no public registry image yet. Build on the Unraid server or another Lin
 The NVIDIA Driver plugin/runtime must already work on Unraid. Host drivers stay on the server; the image supplies user-space CUDA libraries. For one NVIDIA GPU, `NVIDIA_VISIBLE_DEVICES=all` is sufficient. With multiple cards, use the intended GPU UUID from `nvidia-smi -L`.
 
 Unraid's **Autostart** is a separate setting in its Docker page. Enable it there if you want Buzz to start after a server reboot.
+
+## Updates
+
+Use `ghcr.io/stormavenger/buzz-unraid:latest` to receive stable releases through Unraid's Docker update checks. For automatic installation, enable Buzz in the **Auto Update Applications** plugin and choose a schedule. GitHub builds, checks, and publishes the image when a stable release is published; Unraid downloads that image from GHCR.
+
+Back up appdata before upgrading. Keep the previous version tag and its matching backup for rollback. Selecting a fixed tag such as `:0.1.0` keeps that version until you change it.
 
 ## GPU verification
 

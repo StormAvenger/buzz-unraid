@@ -1,6 +1,6 @@
 # Unraid templates
 
-The single Community Applications template is [../templates/buzz.xml](../templates/buzz.xml). It targets the planned public GHCR image; do not submit it until that image exists and can be pulled without authentication.
+The single Community Applications template is [../templates/buzz.xml](../templates/buzz.xml). It uses the public `ghcr.io/stormavenger/buzz-unraid:latest` image. The main README explains manual installation while the Apps listing awaits submission and approval.
 
 To install a locally built development image, generate a local template rather than publishing a second app entry:
 

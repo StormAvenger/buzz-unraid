@@ -2,7 +2,9 @@
 
 ## Current state
 
-The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. The development container has passed the server and GitHub Linux checks in [VALIDATION.md](VALIDATION.md). The public image and Unraid listing are separate releases and are not yet available.
+The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. [v0.1.0](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.0) publishes the image as `ghcr.io/stormavenger/buzz-unraid:0.1.0` and `:latest`, with inventory, notices, scan results, matching sources, and checksums attached to the release. The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40604201378) passed all gates.
+
+The official Community Applications scan found one valid Docker app, no hard errors, no template warnings, no starter placeholders, and a publicly pullable image. The final submission is prepared but has not been sent or approved. The repository owner must review the linked forum profile and accept Unraid's applicable terms at submission.
 
 ## 1. Publish the source repository
 
@@ -12,7 +14,7 @@ GitHub's **Check container** workflow builds/tests the project on Linux amd64. T
 
 ## 2. Prepare and publish a downloadable image
 
-Before the first public binary image, complete the actual dependency/license inventory, preserve required notices, and arrange the corresponding-source downloads required by redistributed components (including PyQt/Qt, FFmpeg, and any GPL/LGPL components). A link to an arbitrary upstream main branch is not a substitute for the corresponding versions. Review NVIDIA runtime redistribution terms as well. This review is still pending; source publication alone does not complete it.
+For every binary release, collect the actual dependency/license inventory, preserve required notices, and provide matching source downloads for redistributed components (including PyQt/Qt, FFmpeg, and GPL/LGPL components). A link to an arbitrary upstream main branch is not a substitute for the corresponding versions. Review NVIDIA runtime redistribution terms when updating those components. See [REDISTRIBUTION.md](REDISTRIBUTION.md) for the v0.1.0 component review and exclusions.
 
 The **Publish image** workflow runs when a GitHub release is published. Create a release tagged `v0.1.0` (or a later version) from the reviewed commit. The workflow builds/tests the image, collects the installed package inventory and notices from a clean image, scans it, downloads matching upstream sources, and attaches the records and checksums to that release before pushing the image. A stable release updates `ghcr.io/stormavenger/buzz-unraid:latest`; prerelease tags and releases marked as prereleases do not change `:latest`.
 
@@ -26,9 +28,9 @@ Sources: [GHCR authentication and visibility](https://docs.github.com/en/package
 
 ## 3. Finalize the Unraid listing
 
-The repository includes one public Docker app XML at `templates/buzz.xml`, the root `ca_profile.xml`, an MIT root license, original `icon.svg`, and GitHub issue support. The template already has the planned public image, WebUI, read-only source mapping, writable output/upload mappings, NVIDIA settings, and raw TemplateURL. Do not submit while the image is unavailable.
+The repository includes one public Docker app XML at `templates/buzz.xml`, the root `ca_profile.xml`, an MIT root license, original `icon.svg`, and GitHub issue support. The template includes the public image, WebUI, read-only source mapping, writable output/upload mappings, NVIDIA settings, and raw TemplateURL.
 
-A dedicated Unraid forum support thread is useful for users; add its real URL if one is created. Never invent a thread URL. GitHub Issues is the current planned support destination.
+A dedicated Unraid forum support thread is useful for users; add its real URL if one is created. Never invent a thread URL. GitHub Issues is the support destination.
 
 ## 4. Submit through Community Applications
 
