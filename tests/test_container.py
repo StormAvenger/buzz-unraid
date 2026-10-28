@@ -125,7 +125,7 @@ class DependencyLockTests(unittest.TestCase):
     def test_direct_wheel_urls_have_one_artifact_hash(self):
         # uv rejects multiple archive hashes on one direct URL. This can happen
         # when an index-based lock is reused while switching to a fixed wheel.
-        source = (ROOT / "requirements/runtime.lock").read_text()
+        source = (ROOT / "requirements/cu126/runtime.lock").read_text()
         blocks = re.split(r"\n(?=[A-Za-z0-9])", source)
         direct = [block for block in blocks if re.match(r"^[\w.-]+ @ https://", block)]
         self.assertGreaterEqual(len(direct), 2)

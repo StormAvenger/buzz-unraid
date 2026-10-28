@@ -6,9 +6,9 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
-    "Dockerfile", "README.md", "THIRD_PARTY_NOTICES.md", "compose.yaml",
+    "Dockerfile", "Dockerfile.deps", "README.md", "THIRD_PARTY_NOTICES.md", "compose.yaml",
     "compose.nvidia.yaml", ".env.example", ".dockerignore", ".gitignore",
-    ".github/workflows/container.yml", ".github/workflows/publish-image.yml",
+    ".github/workflows/container.yml", ".github/workflows/dependencies.yml", ".github/workflows/publish-image.yml",
     "LICENSE", "icon.svg", "ca_profile.xml", "AGENTS.md", ".github/PULL_REQUEST_TEMPLATE.md",
 )
 DIRECTORIES = ("rootfs", "scripts", "requirements", "docs", "unraid", "tests", "licenses", "templates")

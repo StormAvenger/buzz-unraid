@@ -1,0 +1,113 @@
+name: Publish cu126 dependencies
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - Dockerfile.deps
+      - requirements/cu126/**
+      - licenses/**
+      - LICENSE
+      - THIRD_PARTY_NOTICES.md
+      - scripts/collect-sources.py
+      - scripts/release-inventory.py
+permissions:
+  contents: read
+concurrency:
+  group: publish-cu126-dependencies
+  cancel-in-progress: false
+jobs:
+  dependencies:
+    environment: release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      packages: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Identify immutable dependency inputs
+        run: |
+          KEY=$(python3 scripts/dependency.py key)
+          echo "KEY=$KEY" >> "$GITHUB_ENV"
+          echo "TAG=deps-cu126-$KEY" >> "$GITHUB_ENV"
+          echo "DEP_IMAGE=ghcr.io/stormavenger/buzz-unraid-deps:cu126-$KEY" >> "$GITHUB_ENV"
+      - name: Reuse an existing complete publication
+        id: existing
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            python3 scripts/dependency.py resolve
+            echo "complete=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Check source and build context
+        if: steps.existing.outputs.complete != 'true'
+        run: |
+          python3 scripts/check-public-files.py
+          python3 -m unittest discover -s tests -v
+          node --test tests/test_status.mjs
+          docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
+          sh scripts/check-build-context.sh
+      - name: Build dependencies and app; verify browser and layer reuse
+        if: steps.existing.outputs.complete != 'true'
+        run: |
+          python3 scripts/dependency.py build --bootstrap --revision "$GITHUB_SHA"
+          LOCAL_IMAGE="buzz-unraid-deps:cu126-$KEY"
+          docker tag "$LOCAL_IMAGE" "$DEP_IMAGE"
+          sh scripts/smoke-test.sh buzz-unraid:ci
+          python3 scripts/dependency.py layer-proof
+      - name: Scan both clean images and collect dependency sources once
+        if: steps.existing.outputs.complete != 'true'
+        run: |
+          sh scripts/image-records.sh "$DEP_IMAGE" dependency-output
+          sh scripts/image-records.sh buzz-unraid:ci release-output
+          docker builder prune --all --force
+          python3 scripts/collect-sources.py dependency-output/inventory.json dependency-output
+      - name: Preserve preparation records
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dependency-preparation-records
+          retention-days: 7
+          path: |
+            dependency-output/*.json
+            dependency-output/*.txt
+            dependency-output/SHA256SUMS
+            dependency-output/notices.tar.gz
+            release-output/*.json
+          if-no-files-found: ignore
+      - name: Attach corresponding sources before image publication
+        if: steps.existing.outputs.complete != 'true'
+        run: |
+          gh release create "$TAG" --target "$GITHUB_SHA" --prerelease \
+            --title "cu126 dependency sources $KEY" \
+            --notes "Immutable dependency image sources and notices. App releases link here; this is not an app update. Publication is complete only when dependency-image.json and SHA256SUMS are present." \
+            --repo "$GITHUB_REPOSITORY" \
+            dependency-output/*.json dependency-output/*.txt dependency-output/SHA256SUMS \
+            dependency-output/notices.tar.gz dependency-output/sources.tar.part*
+      - name: Authenticate to GHCR
+        if: steps.existing.outputs.complete != 'true'
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish dependency image and immutable digest record
+        if: steps.existing.outputs.complete != 'true'
+        shell: bash
+        run: |
+          set -o pipefail
+          docker push "$DEP_IMAGE" | tee /tmp/buzz-dependency-push.txt
+          DIGEST=$(sed -n 's/.*digest: \(sha256:[a-f0-9]\{64\}\).*/\1/p' /tmp/buzz-dependency-push.txt)
+          python3 scripts/dependency.py record "$DIGEST" "$GITHUB_SHA" dependency-output/dependency-image.json
+          python3 scripts/dependency.py checksums dependency-output
+          gh release upload "$TAG" dependency-output/dependency-image.json dependency-output/SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" --clobber
+      - name: Verify public anonymous dependency access and source records
+        if: steps.existing.outputs.complete != 'true'
+        run: |
+          mkdir -p /tmp/buzz-anonymous-docker
+          DOCKER_CONFIG=/tmp/buzz-anonymous-docker python3 scripts/dependency.py resolve

@@ -67,7 +67,7 @@ For development or a custom build, use the Unraid server or another Linux amd64 
 
    ```sh
    cd /mnt/user/appdata/buzz-build/buzz-unraid
-   docker build --platform linux/amd64 -t buzz-unraid:0.1.2-dev .
+   python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
    ```
 
    The ML dependency stack is substantial. Allow generous Docker storage and time for the first build. The final image build checks that the actual runtime can create Buzz's window, import its decoders, preserve preferences, and route exports correctly.
@@ -117,13 +117,13 @@ The image pins PyTorch 2.8.0 CUDA 12.6 because newer CUDA builds can omit Pascal
 ```sh
 cp .env.example .env
 # Edit the folder paths and GPU selection in .env.
-docker compose -f compose.yaml -f compose.nvidia.yaml up -d --build
+docker compose -f compose.yaml -f compose.nvidia.yaml up -d --no-build
 ```
 
 For a browser/CPU test without requesting a GPU, omit the NVIDIA override:
 
 ```sh
-docker compose up -d --build
+docker compose up -d --no-build
 ```
 
 Both target Linux amd64; this is not a native Apple Silicon image.
@@ -133,7 +133,7 @@ Both target Linux amd64; this is not a native Apple Silicon image.
 ```sh
 python3 -m unittest discover -s tests -v
 docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
-docker build --platform linux/amd64 -t buzz-unraid:0.1.2-dev .
+python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
 sh scripts/smoke-test.sh buzz-unraid:0.1.2-dev
 ```
 
@@ -148,3 +148,5 @@ For upgrades, stop the container, back up appdata, and retain the previous image
 Container-specific code and original assets are licensed under the [MIT License](LICENSE).
 
 Buzz is also MIT licensed. Bundled third-party software retains its respective licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).
+
+Dependency/app build details and the first-publication procedure are in [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md).

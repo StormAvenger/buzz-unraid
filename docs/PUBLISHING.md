@@ -22,7 +22,7 @@ The **Publish image** workflow runs when a GitHub release is published. Create a
 
 For preparation without publishing, run the workflow manually with **publish** unchecked. Inspect its `release-records` artifact. Preparation artifacts retain metadata and notices for seven days; full source archive parts are attached directly to the matching GitHub release during publication, avoiding a duplicate multi-gigabyte Actions artifact. A manual publish requires an existing matching `vVERSION` GitHub release. Source collection fails the workflow if required source records or downloads are missing. Review the scan and the source manifest before the first public image.
 
-The source archive list is tied to the pinned Qt, PyAV, Torch and GUI base versions. Update `requirements/source-archives.json` when those dependencies change. `inventory.json` records the actual installed versions. `source-manifest.json` records archive origins and SHA-256 hashes. The source download parts can be joined and extracted with `cat sources.tar.part* | tar -xf -`; `notices.tar.gz` retains installed and collected upstream notices. Keep these assets available for as long as the corresponding image is offered.
+The source archive list is tied to the pinned Qt, PyAV, Torch and GUI base versions. Update `requirements/cu126/source-archives.json` when those dependencies change. `inventory.json` records the actual installed versions. `source-manifest.json` records archive origins and SHA-256 hashes. The source download parts can be joined and extracted with `cat sources.tar.part* | tar -xf -`; `notices.tar.gz` retains installed and collected upstream notices. Keep these assets available for as long as the corresponding image is offered.
 
 The workflow uses the repository's temporary `GITHUB_TOKEN`; it does not require a personal access token. After the first publish, check the package's visibility: GHCR packages are initially private by default. For a public Unraid listing, the image must be public and pullable without credentials. Test an anonymous pull and clean installation on another Docker/Unraid host. Include version/digest, dependency inventory, image scan results, source download links, test results, and known limitations in the release notes.
 
@@ -51,3 +51,7 @@ Sources: [official submission help](https://ca.unraid.net/submit/help), [reposit
 ## 5. Maintain the release
 
 Publish immutable version tags and update `:latest` only after tests. Keep older images and their corresponding sources available for rollback and redistribution obligations. Review GPU architecture support before upgrading CUDA/PyTorch/CTranslate2. Repeat clean installation and recreation testing for meaningful changes. Update the template when mappings, required variables, ports, or GPU prerequisites change, and respond to support issues.
+
+## Split-image releases
+
+For the cu126 split workflow, matching upstream source bundles live on the exact dependency release linked by the app release’s `SOURCE-README.txt` and `dependency-image.json`. Each app release still supplies its fresh inventory, notices, scan and checksums, plus the app patches/recipes in its source archive. Keep both releases available. See [DEPENDENCIES.md](DEPENDENCIES.md) for approval, bootstrap and layer verification procedures. Historical releases retain their original bundled sources.
