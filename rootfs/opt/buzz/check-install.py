@@ -63,10 +63,24 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     seed = runpy.run_path("/opt/buzz/first-run.py")["seed"]
     settings = QSettings("Buzz", "")
     seed(settings)
+    assert settings.value("file-transcriber/last-import-folder") == "/uploads"
     assert settings.value("file_transcriber/output_formats") == ["txt", "srt", "vtt"]
     settings.setValue("file-transcriber/last-import-folder", "/custom-input")
     seed(settings)
     assert settings.value("file-transcriber/last-import-folder") == "/custom-input"
+    # Exercise upgrades with real QSettings, then a subsequent user choice.
+    migration_settings = QSettings("Buzz-upload-default-check", "")
+    for previous, expected in ((None, "/uploads"), ("", "/uploads"),
+                               ("/input", "/uploads"), ("/custom", "/custom"),
+                               ("/uploads", "/uploads")):
+        migration_settings.clear()
+        if previous is not None:
+            migration_settings.setValue("file-transcriber/last-import-folder", previous)
+        seed(migration_settings)
+        assert migration_settings.value("file-transcriber/last-import-folder") == expected
+        migration_settings.setValue("file-transcriber/last-import-folder", "/input")
+        seed(migration_settings)
+        assert migration_settings.value("file-transcriber/last-import-folder") == "/input"
     from buzz.widgets.preferences_dialog.models.file_transcription_preferences import FileTranscriptionPreferences
     from buzz.model_loader import ModelType
     from buzz.transcriber.transcriber import get_output_file_path, Task, OutputFormat

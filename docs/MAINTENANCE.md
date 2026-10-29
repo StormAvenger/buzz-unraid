@@ -68,7 +68,7 @@ Sources:
 
 The patch checks that every target appears exactly once before writing anything. If upstream changes, the image build fails until reviewed. Host tests cover CPU/Pascal/modern-GPU compute selection, output precedence, blocked runtime package installation, direct-wheel lock hashes, and atomic failure on upstream drift. Full-window and preference tests run inside the image build. No other upstream application source is intentionally changed.
 
-First-run seeding uses Buzz's QSettings API, its actual `file_transcriber` preference group, and its model dataclass. It fills missing settings individually and preserves user changes. Automatic export formats default to TXT/SRT/VTT.
+First-run seeding uses Buzz's QSettings API, its actual `file_transcriber` preference group, and its model dataclass. The import picker defaults to `/uploads`, matching the browser uploader. A one-time migration changes the old `/input` default (or an empty preference) to `/uploads`, preserves custom folders, and records completion so later choices including `/input` survive restarts. Other missing settings are filled individually. Automatic export formats default to TXT/SRT/VTT. Build checks exercise fresh settings, legacy settings, custom paths and subsequent folder choices with real QSettings.
 
 ## Release gates
 

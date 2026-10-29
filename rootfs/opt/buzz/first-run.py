@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-"""Seed missing preferences without resetting any existing user preferences."""
+"""Seed missing preferences and migrate the legacy container import default once."""
 import os
 from pathlib import Path
 
@@ -9,8 +9,17 @@ from PyQt6.QtCore import QSettings
 def seed(settings):
     from buzz.model_loader import ModelType, TranscriptionModel, WhisperModelSize
 
+    import_folder = "file-transcriber/last-import-folder"
+    migration = "container/uploads-import-default-v1"
+    if not settings.contains(migration):
+        # Older containers seeded /input, while browser uploads land in /uploads.
+        # Do this once so later folder selections, including /input, are retained.
+        if settings.value(import_folder) in (None, "", "/input"):
+            settings.setValue(import_folder, "/uploads")
+        settings.setValue(migration, True)
+
     defaults = {
-        "file-transcriber/last-import-folder": "/input",
+        import_folder: "/uploads",
         "file_transcriber/model": TranscriptionModel(
             model_type=ModelType.FASTER_WHISPER,
             whisper_model_size=WhisperModelSize.SMALL,
