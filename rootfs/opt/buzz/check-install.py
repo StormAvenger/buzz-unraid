@@ -25,8 +25,6 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import torchaudio
     import torchcodec
     from torchcodec.decoders import AudioDecoder
-    codec_audio = AudioDecoder(str(recording), sample_rate=16000, num_channels=1).get_all_samples()
-    assert tuple(codec_audio.data.shape) == (1, 16000), "TorchCodec audio decoding/resampling failed"
     import ctranslate2
     import faster_whisper
     from faster_whisper.audio import decode_audio
@@ -40,6 +38,8 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
         decoded = decode_audio(str(recording), split_stereo=channels == 2)
         streams = (decoded,) if channels == 1 else decoded
         assert all(len(stream) == 16000 for stream in streams), "Audio decoding/resampling failed"
+        codec_audio = AudioDecoder(str(recording), sample_rate=16000, num_channels=1).get_all_samples()
+        assert tuple(codec_audio.data.shape) == (1, 16000), "TorchCodec audio decoding/resampling failed"
     import hydra
     import lightning
     import fsspec.implementations.http
