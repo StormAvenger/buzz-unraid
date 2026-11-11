@@ -13,13 +13,13 @@ docker build --build-arg DEPS_IMAGE=buzz-unraid-deps:local -t buzz-unraid:dev .
 
 These commands require Docker, not host Python. Allow generous Docker storage and time for the first dependency build. The app build checks that the shipped runtime creates Buzz’s window, imports its decoders, preserves preferences, and routes exports correctly.
 
-Generate the local Unraid template with the image’s Python interpreter. The explicit `--image` overrides the generator’s legacy default:
+Generate the local Unraid template with the image’s Python interpreter:
 
 ```sh
 mkdir -p /boot/config/plugins/dockerMan/templates-user
 docker run --rm --entrypoint /opt/venv/bin/python \
   -v "$PWD:/source:ro" buzz-unraid:dev \
-  /source/scripts/local-template.py --image buzz-unraid:dev \
+  /source/scripts/local-template.py \
   > /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml
 ```
 
@@ -37,27 +37,19 @@ cp .env.example .env
 python3 scripts/dependency.py build --bootstrap --image buzz-unraid:dev
 ```
 
-The checked-in Compose file has a legacy image default. Override it without editing the file, using [Compose’s stdin override](https://docs.docker.com/reference/cli/docker/compose/#specifying-multiple-compose-files):
+Start the NVIDIA configuration using the locally built `buzz-unraid:dev` image:
 
 ```sh
-docker compose -f compose.yaml -f compose.nvidia.yaml -f - up -d --no-build <<'YAML'
-services:
-  buzz:
-    image: buzz-unraid:dev
-YAML
+docker compose -f compose.yaml -f compose.nvidia.yaml up -d --no-build
 ```
 
 For a browser/CPU test without requesting a GPU:
 
 ```sh
-docker compose -f compose.yaml -f - up -d --no-build <<'YAML'
-services:
-  buzz:
-    image: buzz-unraid:dev
-YAML
+docker compose up -d --no-build
 ```
 
-Use the same files and override for later Compose operations. Both paths target Linux amd64.
+Both paths target Linux amd64.
 
 ## Development and releases
 

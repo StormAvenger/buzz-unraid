@@ -1,6 +1,6 @@
 services:
   buzz:
-    image: buzz-unraid:0.1.2-dev
+    image: buzz-unraid:dev
     platform: linux/amd64
     build:
       context: .

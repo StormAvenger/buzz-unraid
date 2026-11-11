@@ -51,7 +51,7 @@ Writable folders must allow Unraid’s default user/group **99:100** (`nobody:us
 
 ## Updates & backups
 
-Use `ghcr.io/stormavenger/buzz-unraid:latest` for stable updates, or a fixed tag such as `:0.1.3` to stay on a particular release. Check for updates on Unraid’s Docker page; for automatic installation, select Buzz in the **Auto Update Applications** plugin and choose a schedule.
+Use `ghcr.io/stormavenger/buzz-unraid:latest` for stable updates, or a version tag from the [Releases page](https://github.com/StormAvenger/buzz-unraid/releases) to stay on a particular release. Check for updates on Unraid’s Docker page; for automatic installation, select Buzz in the **Auto Update Applications** plugin and choose a schedule.
 
 Back up appdata before upgrading. Keep the previous image tag and its matching backup for rollback. Dependency updates are larger downloads than app-only updates, which reuse the dependency layers.
 
@@ -80,7 +80,7 @@ For more information about a problem, download **Diagnostics** from the top bar.
 
 ## Security & privacy
 
-This is a single-user session: browser connections share the desktop and history. Use a trusted LAN or VPN; no login is configured by default. Telemetry is disabled, and diagnostics stay local until you choose to share them. The first model download comes from Hugging Face; later local transcription can run offline. URL imports and optional API features need their respective services.
+This is a single-user session: browser connections share the desktop and history. Use a trusted LAN or VPN; no login is available yet. Telemetry is disabled, and diagnostics stay local until you choose to share them. The first model download comes from Hugging Face; later local transcription can run offline. URL imports and optional API features need their respective services.
 
 ## Limitations
 
