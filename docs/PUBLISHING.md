@@ -18,7 +18,7 @@ GitHub's **Check container** workflow builds/tests the project on Linux amd64. T
 
 For every binary release, collect the actual dependency/license inventory, preserve required notices, and provide matching source downloads for redistributed components (including PyQt/Qt, FFmpeg, and GPL/LGPL components). A link to an arbitrary upstream main branch is not a substitute for the corresponding versions. Review NVIDIA runtime redistribution terms when updating those components. See [REDISTRIBUTION.md](REDISTRIBUTION.md) for the v0.1.0 component review and exclusions.
 
-The **Publish image** workflow runs when a GitHub release is published. Create a release tagged `v0.1.0` (or a later version) from the reviewed commit. The workflow builds/tests the image, collects the installed package inventory and notices from a clean image, scans it, verifies and links the exact dependency source release, and attaches fresh app records and checksums before pushing the image. Dependency publication collects the upstream sources once. A stable release updates `ghcr.io/stormavenger/buzz-unraid:latest`; prerelease tags and releases marked as prereleases do not change `:latest`.
+The **Publish image** workflow runs when a GitHub release is published. Create a release tagged `v0.1.0` (or a later version) from the reviewed commit. The workflow builds/tests the image, collects the installed package inventory and notices from a clean image, scans it, verifies and links the exact dependency source release, and attaches fresh app records and checksums before pushing the image. Dependency publication collects the upstream sources once. A stable release updates both `ghcr.io/stormavenger/buzz-unraid:beta` and `:latest`. Prereleases never change `:latest`; the Early Access rules below determine whether they update `:beta`.
 
 For preparation without publishing, run the workflow manually with **publish** unchecked. Inspect its `release-records` artifact. Preparation artifacts retain metadata and notices for seven days; full source archive parts are attached directly to the matching dependency GitHub release during dependency publication, avoiding a duplicate multi-gigabyte Actions artifact. A manual publish requires an existing matching `vVERSION` GitHub release. Source collection fails the workflow if required source records or downloads are missing. Review the scan and the source manifest before the first public image.
 
@@ -27,6 +27,35 @@ The source archive list is tied to the pinned Qt, PyAV, Torch and GUI base versi
 The workflow uses the repository's temporary `GITHUB_TOKEN`; it does not require a personal access token. After the first publish, check the package's visibility: GHCR packages are initially private by default. For a public Unraid listing, the image must be public and pullable without credentials. Test an anonymous pull and clean installation on another Docker/Unraid host. Include version/digest, dependency inventory, image scan results, source download links, test results, and known limitations in the release notes.
 
 Sources: [GHCR authentication and visibility](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+### Early Access releases
+
+Publish a reviewed commit with passing required CI as a new immutable `vMAJOR.MINOR.PATCH-rc.N` or `vMAJOR.MINOR.PATCH-beta.N` tag (for example, `v1.2.3-rc.1`), and mark the GitHub release **Set as a pre-release**. The owner must approve the unchanged `release` environment. After every existing build, browser, scan and source gate passes, publication pushes the versioned image and updates `:beta`, leaving `:latest` unchanged. Other prerelease suffixes receive only their versioned image. An rc/beta tag without the GitHub prerelease flag also remains versioned-only.
+
+Manual preparation with **publish** unchecked pushes nothing. A manual publish reads the actual matching GitHub release's prerelease flag, just like a release-triggered publication; it does not infer stable status from a missing event field. Draft or mismatched releases are rejected.
+
+To promote a tested EA build, create a **new stable version tag and release** at the reviewed commit, without a suffix or prerelease flag. Do not move an EA tag or turn its existing release into a stable release. Approve the stable run and repeat all gates and hardware checks appropriate to the release. The stable publication pushes its versioned image, then `:beta`, then `:latest`, so a failed beta push cannot advance latest alone. Verify the channel digests and version/revision labels after publication. Older versioned images and their sources remain available.
+
+### Run EA beside stable on Unraid
+
+The store template continues to use stable; no template Branch selector is provided yet. Use the NVIDIA Driver plugin and a separate container name, unused host port, appdata, uploads and output. These example folders are dedicated to EA; do not point them at stable's writable folders. The following commands create a separate installation; they do not replace the stable container:
+
+```sh
+mkdir -p /mnt/user/appdata/buzz-transcription-ea \
+  /mnt/user/transcription-ea/input /mnt/user/transcription-ea/uploads \
+  /mnt/user/transcription-ea/output
+chown 99:100 /mnt/user/transcription-ea/input \
+  /mnt/user/transcription-ea/uploads /mnt/user/transcription-ea/output
+docker run -d --name Buzz-Transcription-EA --runtime=nvidia --shm-size=1g \
+  -p 8089:5800 -e NVIDIA_VISIBLE_DEVICES=all \
+  -v /mnt/user/appdata/buzz-transcription-ea:/config \
+  -v /mnt/user/transcription-ea/input:/input:ro \
+  -v /mnt/user/transcription-ea/uploads:/uploads \
+  -v /mnt/user/transcription-ea/output:/output \
+  ghcr.io/stormavenger/buzz-unraid:beta
+```
+
+Open your server's address on port **8089**. Choose another unused port if necessary. For a repeatable test, replace `:beta` with the exact EA version tag from Releases. Pull that tag before recreating this EA container to update it; keep the same EA mappings. Run one transcription at a time if stable and EA share a GPU with limited memory. Back up each installation's appdata independently; do not copy an EA database over stable as a promotion method.
 
 ## 3. Finalize the Unraid listing
 

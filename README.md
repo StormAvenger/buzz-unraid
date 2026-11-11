@@ -93,6 +93,8 @@ Unraid's **Autostart** is a separate setting in its Docker page. Enable it there
 
 ## Updates
 
+`:beta` receives early-access builds and may be less tested on hardware.
+
 Use `ghcr.io/stormavenger/buzz-unraid:latest` to receive stable releases through Unraid's Docker update checks. For automatic installation, enable your Buzz-Transcription container in the **Auto Update Applications** plugin and choose a schedule. GitHub builds, checks, and publishes the image when a stable release is published; Unraid downloads that image from GHCR.
 
 Back up appdata before upgrading. Keep the previous version tag and its matching backup for rollback. Selecting a fixed tag such as `:0.1.0` keeps that version until you change it.
