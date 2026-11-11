@@ -10,6 +10,8 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
         "HOME": "home", "XDG_CONFIG_HOME": "config", "XDG_DATA_HOME": "data",
         "XDG_CACHE_HOME": "cache", "XDG_STATE_HOME": "state",
         "BUZZ_MODEL_ROOT": "models", "HF_HOME": "hf", "TORCH_HOME": "torch",
+        # TorchCodec loads Dynamo; build-time base accounts do not exist yet.
+        "TORCHINDUCTOR_CACHE_DIR": "inductor",
     }.items():
         os.environ[name] = str(Path(directory) / relative)
         Path(os.environ[name]).mkdir(parents=True, exist_ok=True)
