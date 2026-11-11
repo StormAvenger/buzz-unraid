@@ -16,6 +16,7 @@ Read this file first. Keep changes small enough to review as a diff.
 - `docs/MAINTENANCE.md`: architecture and compatibility decisions.
 - `docs/VALIDATION.md`: current verification procedure and limits. Put release-specific results in GitHub release notes.
 - `docs/ROADMAP.md`: deferred features. Private working notes end in `.local.md` and must remain ignored.
+- `docs/UPDATE_POSTS.md`: the short header every release note, PR body and issue status reply starts with.
 
 ## Invariants
 
@@ -32,7 +33,7 @@ Read this file first. Keep changes small enough to review as a diff.
 Never use [skip ci] on PR branches; required checks must run.
 
 1. Check `git status`; preserve unrelated work. Create a `codex/` branch from the intended base before editing.
-2. Make one phase per PR. Run applicable checks and describe the concrete problem, behavior, validation and limitations in its body.
+2. Make one phase per PR. Run applicable checks and describe the concrete problem, behavior, validation and limitations in its body. Start the body with the header from `docs/UPDATE_POSTS.md`.
 3. Open and attach the PR, give the user its number and review range, and leave it unmerged. Stacked PRs must name their prerequisite and target that branch until it merges.
 4. Do not push to `main`, bypass branch protection, or merge unless the human explicitly requests it. Required container CI must pass before merging.
 
@@ -49,7 +50,7 @@ Never use [skip ci] on PR branches; required checks must run.
 
 1. Obtain the human's publication instruction. Use a reviewed commit with passing required CI and a clean public source tree.
 2. Verify the GitHub `release` environment has the owner configured as a required reviewer. An environment name alone provides no approval protection. Never remove reviewers or approve on the human's behalf.
-3. Create a new immutable version tag at the tested commit; never move an existing release tag. Publish clear notes with known limits and mark image publication pending until its workflow succeeds.
+3. Create a new immutable version tag at the tested commit; never move an existing release tag. Publish clear notes with known limits and mark image publication pending until its workflow succeeds. Notes start with the header from `docs/UPDATE_POSTS.md`.
 4. Let the environment approval and all build/runtime/privacy/scan/source gates pass. Never bypass a gate or publish from private appdata.
 5. Verify public anonymous image access, version/revision labels, checksums and source links, matching stable/versioned digests, and appropriate disposable hardware/browser checks. Keep older releases and sources available.
 6. Update release notes with evidence and digest, then current documentation through a separate reviewed PR. Report what was published and leave installation to the user unless they explicitly requested deployment.
