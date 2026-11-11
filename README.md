@@ -29,7 +29,7 @@ While Buzz opens, a startup screen shows its readiness. If startup or the deskto
 
 1. Start the container and choose **WebUI** from its Unraid icon menu.
 2. For existing server recordings, import files from `/input` using Buzz's **+** button.
-3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Use Buzz's **+** button to import the uploaded files from `/uploads`.
+3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Click Buzz's **+** button: the file picker defaults to `/uploads`, where those files are saved. After you choose another folder, Buzz remembers it; enter `/uploads` to return to uploaded files, or `/input` for your mapped server recordings.
 4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
 5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running.
 6. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
