@@ -144,7 +144,7 @@ def main():
     args = parser.parse_args()
     inventory = json.loads(args.inventory.read_text())
     expected = {p["name"].lower(): p["version"] for p in inventory["python"]}
-    for name, version in {"pyqt6-qt6": "6.9.1", "av": "19.0.2", "torch": "2.8.0+cu126", "torchaudio": "2.8.0+cu126", "lameenc": "1.9.0"}.items():
+    for name, version in {"pyqt6-qt6": "6.9.1", "av": "19.0.2", "torch": "2.10.0+cu126", "torchaudio": "2.10.0+cu126", "lameenc": "1.9.0"}.items():
         if expected.get(name) != version:
             raise ValueError(f"Review pinned source archives for changed {name}: {expected.get(name)}")
     output = args.output

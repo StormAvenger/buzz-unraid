@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: MIT
-# Run with uv 0.13.5; source builds may need network access during resolution.
+# Run with uv 0.13.7; source builds may need network access during resolution.
 set -eu
 cd "$(dirname "$0")/.."
 uv pip compile requirements/cu126/build.in --python-version 3.12 \

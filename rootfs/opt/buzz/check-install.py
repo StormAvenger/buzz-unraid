@@ -22,6 +22,9 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import torch
     import torchaudio
     import torchcodec
+    from torchcodec.decoders import AudioDecoder
+    codec_audio = AudioDecoder(str(recording), sample_rate=16000, num_channels=1).get_all_samples()
+    assert tuple(codec_audio.data.shape) == (1, 16000), "TorchCodec audio decoding/resampling failed"
     import ctranslate2
     import faster_whisper
     from faster_whisper.audio import decode_audio
@@ -48,6 +51,13 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import runpy
 
     assert torch.version.cuda == "12.6", f"Wrong CUDA build: {torch.__version__}"
+    assert torch.__version__ == "2.10.0+cu126"
+    assert torchaudio.__version__ == "2.10.0+cu126"
+    assert torchcodec.__version__ == "0.10.0"
+    # get_arch_list() returns [] without a GPU; read the packaged build flags.
+    architectures = torch._C._cuda_getArchFlags().split()
+    print("Packaged PyTorch CUDA architectures:", architectures, flush=True)
+    assert "sm_61" in architectures, "The cu126 wheel must retain GTX 1080/Pascal support"
     import buzz_observability
     buzz_observability.STATE = Path(directory) / 'readiness'
     buzz_observability.STATE.mkdir()
