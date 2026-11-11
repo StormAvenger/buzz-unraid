@@ -30,7 +30,7 @@ The Docker healthcheck also requires the real window heartbeat. Build checks exe
 - Faster Whisper: `1.2.1`; CTranslate2: `4.6.2`; NumPy: `1.26.4`.
 - All Python runtime dependencies are version-and-hash locked for Linux x86_64/glibc 2.39. Build bootstrap dependencies are locked separately.
 
-OS packages are refreshed in dependency builds using `apt-get upgrade`; bump the reviewed `requirements/cu126/os-refresh` date to invalidate the cached upgrade layer and dependency key. App-only builds reuse the approved dependency image. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
+OS packages are refreshed in dependency builds using the pinned GUI base's `upg-pkg all` helper, which runs `apt-get upgrade` after preparing the base's log symlink and account files; bump the reviewed `requirements/cu126/os-refresh` date to invalidate the cached upgrade layer and dependency key. App-only builds reuse the approved dependency image. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
 
 Regenerate locks with uv 0.13.7 and `sh scripts/lock-dependencies.sh`. Review the changes before rebuilding; no startup-time dependency installs are configured.
 

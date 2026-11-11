@@ -57,7 +57,9 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     # get_arch_list() returns [] without a GPU; read the packaged build flags.
     architectures = torch._C._cuda_getArchFlags().split()
     print("Packaged PyTorch CUDA architectures:", architectures, flush=True)
-    assert "sm_61" in architectures, "The cu126 wheel must retain GTX 1080/Pascal support"
+    # NVIDIA cubins are forward-compatible within a compute-capability major:
+    # sm_60 also runs on the GTX 1080's sm_61. Hardware validation is separate.
+    assert {"sm_60", "sm_61"}.intersection(architectures), "The cu126 wheel must retain Pascal code"
     import buzz_observability
     buzz_observability.STATE = Path(directory) / 'readiness'
     buzz_observability.STATE.mkdir()

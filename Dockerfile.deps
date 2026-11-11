@@ -7,8 +7,9 @@ FROM ${GUI_IMAGE} AS common
 USER 0:0
 # A reviewed refresh date invalidates the cached OS upgrade layer.
 COPY requirements/cu126/os-refresh /usr/share/buzz-container/os-refresh
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
+# The base helper prepares its /var/log -> /config/log link and account files
+# before apt-get upgrade, then removes the temporary build-time state.
+RUN upg-pkg all \
     && add-pkg \
     ca-certificates openssl libssl3t64 ffmpeg fonts-dejavu-core gettext libasound2t64 \
     libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
