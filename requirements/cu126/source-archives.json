@@ -239,12 +239,12 @@
     },
     {
       "component": "pytorch",
-      "url": "https://codeload.github.com/pytorch/pytorch/tar.gz/refs/tags/v2.8.0",
+      "url": "https://codeload.github.com/pytorch/pytorch/tar.gz/refs/tags/v2.10.0",
       "origin": "Pinned upstream release source / build recipes"
     },
     {
       "component": "torchaudio",
-      "url": "https://codeload.github.com/pytorch/audio/tar.gz/refs/tags/v2.8.0",
+      "url": "https://codeload.github.com/pytorch/audio/tar.gz/refs/tags/v2.10.0",
       "origin": "Pinned upstream release source / build recipes"
     },
     {

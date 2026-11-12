@@ -10,6 +10,8 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
         "HOME": "home", "XDG_CONFIG_HOME": "config", "XDG_DATA_HOME": "data",
         "XDG_CACHE_HOME": "cache", "XDG_STATE_HOME": "state",
         "BUZZ_MODEL_ROOT": "models", "HF_HOME": "hf", "TORCH_HOME": "torch",
+        # TorchCodec loads Dynamo; build-time base accounts do not exist yet.
+        "TORCHINDUCTOR_CACHE_DIR": "inductor",
     }.items():
         os.environ[name] = str(Path(directory) / relative)
         Path(os.environ[name]).mkdir(parents=True, exist_ok=True)
@@ -22,6 +24,7 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import torch
     import torchaudio
     import torchcodec
+    from torchcodec.decoders import AudioDecoder
     import ctranslate2
     import faster_whisper
     from faster_whisper.audio import decode_audio
@@ -35,6 +38,8 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
         decoded = decode_audio(str(recording), split_stereo=channels == 2)
         streams = (decoded,) if channels == 1 else decoded
         assert all(len(stream) == 16000 for stream in streams), "Audio decoding/resampling failed"
+        codec_audio = AudioDecoder(str(recording), sample_rate=16000, num_channels=1).get_all_samples()
+        assert tuple(codec_audio.data.shape) == (1, 16000), "TorchCodec audio decoding/resampling failed"
     import hydra
     import lightning
     import fsspec.implementations.http
@@ -48,6 +53,15 @@ with tempfile.TemporaryDirectory(prefix="buzz-install-check-") as directory:
     import runpy
 
     assert torch.version.cuda == "12.6", f"Wrong CUDA build: {torch.__version__}"
+    assert torch.__version__ == "2.10.0+cu126"
+    assert torchaudio.__version__ == "2.10.0+cu126"
+    assert torchcodec.__version__ == "0.10.0"
+    # get_arch_list() returns [] without a GPU; read the packaged build flags.
+    architectures = torch._C._cuda_getArchFlags().split()
+    print("Packaged PyTorch CUDA architectures:", architectures, flush=True)
+    # NVIDIA cubins are forward-compatible within a compute-capability major:
+    # sm_60 also runs on the GTX 1080's sm_61. Hardware validation is separate.
+    assert {"sm_60", "sm_61"}.intersection(architectures), "The cu126 wheel must retain Pascal code"
     import buzz_observability
     buzz_observability.STATE = Path(directory) / 'readiness'
     buzz_observability.STATE.mkdir()
