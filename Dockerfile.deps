@@ -1,14 +1,15 @@
 # syntax=docker/dockerfile:1
 # SPDX-License-Identifier: MIT
 ARG GUI_IMAGE=jlesage/baseimage-gui:ubuntu-24.04-v4.14.0@sha256:8004b5799addeb62e5ce2fed3b611016433faeb4f9d2126956128699b45fa3ee
-FROM ghcr.io/astral-sh/uv:0.13.5@sha256:32a7bb39b496babbd997b0a39a4d66c126bdaf5661b302bf6f06abda8deca6ff AS uv
+FROM ghcr.io/astral-sh/uv:0.13.7@sha256:96f40d3904aad8d0bd010539001d36c8e2188b981e1334471a90c4a1d93bb490 AS uv
 FROM ${GUI_IMAGE} AS common
 # The base creates account files at startup; avoid build-time name/group lookup.
 USER 0:0
 # A reviewed refresh date invalidates the cached OS upgrade layer.
 COPY requirements/cu126/os-refresh /usr/share/buzz-container/os-refresh
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
+# The base helper prepares its /var/log -> /config/log link and account files
+# before apt-get upgrade, then removes the temporary build-time state.
+RUN upg-pkg all \
     && add-pkg \
     ca-certificates openssl libssl3t64 ffmpeg fonts-dejavu-core gettext libasound2t64 \
     libegl1 libgl1 libglib2.0-0t64 libgomp1 libportaudio2 libpulse0 \
