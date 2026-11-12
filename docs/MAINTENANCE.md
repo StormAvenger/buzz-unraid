@@ -23,20 +23,20 @@ The Docker healthcheck also requires the real window heartbeat. Build checks exe
 ## Version pins
 
 - GUI base: `jlesage/baseimage-gui:ubuntu-24.04-v4.14.0`.
-- Build tool: `ghcr.io/astral-sh/uv:0.13.5`.
+- Build tool: `ghcr.io/astral-sh/uv:0.13.7`.
 - Buzz: published Linux wheel `1.4.5`, including bundled Whisper.cpp and Demucs code.
 - Python: Ubuntu 24.04's Python 3.12, matching that Buzz wheel.
-- PyTorch/torchaudio: `2.8.0+cu126` via explicit official wheel URLs.
+- PyTorch/torchaudio: `2.10.0+cu126` via explicit official wheel URLs.
 - Faster Whisper: `1.2.1`; CTranslate2: `4.6.2`; NumPy: `1.26.4`.
 - All Python runtime dependencies are version-and-hash locked for Linux x86_64/glibc 2.39. Build bootstrap dependencies are locked separately.
 
-OS packages are refreshed in dependency builds using `apt-get upgrade`; bump the reviewed `requirements/cu126/os-refresh` date to invalidate the cached upgrade layer and dependency key. App-only builds reuse the approved dependency image. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
+OS packages are refreshed in dependency builds using the pinned GUI base's `upg-pkg all` helper, which runs `apt-get upgrade` after preparing the base's log symlink and account files; bump the reviewed `requirements/cu126/os-refresh` date to invalidate the cached upgrade layer and dependency key. App-only builds reuse the approved dependency image. The GUI base and uv build-tool images are pinned to immutable registry digests. Ubuntu packages still depend on the repositories at build time; this project does not claim byte-identical image builds.
 
-Regenerate locks with uv 0.13.5 and `sh scripts/lock-dependencies.sh`. Review the changes before rebuilding; no startup-time dependency installs are configured.
+Regenerate locks with uv 0.13.7 and `sh scripts/lock-dependencies.sh`. Review the changes before rebuilding; no startup-time dependency installs are configured.
 
 ## Deliberate compatibility overrides
 
-Buzz 1.4.5's metadata declares `torch==2.8.0` and `torchcodec>=0.9.0`. TorchCodec's official compatibility table pairs PyTorch 2.8 with TorchCodec 0.7. The resolver override in `requirements/cu126/overrides.in` installs `torchcodec==0.7.0`; `--no-deps` installs the complete resolved lock without re-resolving Buzz's incompatible lower bound. Package metadata is retained, so generic `pip check`/`uv pip check` may report this known disagreement. Do not treat a clean dependency resolution alone as proof of runtime compatibility. The build explicitly imports TorchCodec and creates the Buzz window, and these checks must pass before deployment. Other workflows, especially speaker identification and newer Hugging Face models, need separate testing.
+Buzz 1.4.5's metadata pins torch/torchaudio 2.8.0. The security update overrides both with official 2.10.0+cu126 wheels and pairs them with TorchCodec 0.10.0, as specified in the [TorchCodec release notes](https://github.com/meta-pytorch/torchcodec/releases/tag/v0.10.0). `--no-deps` installs the complete resolved lock without re-resolving Buzz's older pins. Package metadata is retained, so generic `pip check`/`uv pip check` may report this known disagreement. Do not treat resolution alone as runtime proof: the build verifies exact versions, packaged CUDA, compiled Pascal architecture support, TorchCodec audio decoding, and the real Buzz window. GPU inference still needs separate hardware testing. Faster Whisper remains the validated backend; speaker identification and separation need their own checks.
 
 NeMo 2.8.0rc2 also pins fsspec 2024.12.0, Hydra <=1.3.2, and Lightning <=2.4.0. The release overrides these to fsspec[http] 2026.6.0, Hydra 1.3.8, and Lightning 2.6.6 to address the image scan's high-severity findings. The HTTP extra is explicit because replacing a dependency with an override can otherwise remove its extras. Setuptools 81.0.0 retains pkg_resources compatibility while updating vulnerable vendored tools; the bootstrap wheel version is 0.46.3. Build checks import the updated modules and create the real Buzz window. Faster Whisper remains the validated backend; NeMo transcription is not a supported/tested release claim. Keep these exceptions documented when evaluating generic metadata checks or updating the lock.
 
@@ -47,7 +47,7 @@ The release workflow pins actions by their official repository commit SHAs and T
 Sources:
 
 - [Buzz 1.4.5 dependency metadata](https://github.com/chidiwilliams/buzz/blob/v1.4.5/pyproject.toml)
-- [TorchCodec compatibility table](https://github.com/meta-pytorch/torchcodec/tree/v0.9.0#installing-torchcodec)
+- [TorchCodec compatibility table](https://github.com/meta-pytorch/torchcodec/releases/tag/v0.10.0)
 - [PyTorch Pascal support in CUDA 12.6 builds](https://dev-discuss.pytorch.org/t/cuda-toolkit-version-and-architecture-support-update-maxwell-and-pascal-architecture-support-removed-in-cuda-12-8-and-12-9-builds/3128)
 - [CTranslate2 compute-type support](https://opennmt.net/CTranslate2/quantization.html)
 - [cuDNN 9.10.2 support matrix](https://docs.nvidia.com/deeplearning/cudnn/backend/v9.10.2/reference/support-matrix.html)
