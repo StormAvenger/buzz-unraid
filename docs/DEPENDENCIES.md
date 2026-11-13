@@ -20,7 +20,7 @@ The dependency workflow only runs on changes to these inputs on main, or manuall
 
 ## Local and PR builds
 
-On Unraid, use the two plain Docker commands in the README; no host Python is needed. For CI/development hosts with Python, run `python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev`. This reuses the approved image if present, or builds a local unpublished dependency image when its release does not exist. This fallback is explicit and is never used by the app publication workflow. Then run Compose with `up -d --no-build`. For raw Compose builds, supply `DEPS_IMAGE` explicitly; the local placeholder is not an approved publication reference.
+On Unraid, use the two plain Docker commands in the [development guide](DEVELOPMENT.md#build-and-install-locally-on-unraid); no host Python is needed. For CI/development hosts with Python, run `python3 scripts/dependency.py build --bootstrap --image buzz-unraid:dev`. This reuses the approved image if present, or builds a local unpublished dependency image when its release does not exist. This fallback is explicit and is never used by the app publication workflow. Then run Compose with `up -d --no-build`; its image default is `buzz-unraid:dev`. For raw Compose builds, supply `DEPS_IMAGE` explicitly; the local placeholder is not an approved publication reference.
 
 PR CI builds without publishing, runs the existing CPU/browser/storage checks, scans both clean images, and verifies sources. New dependency inputs collect sources in CI; app-only changes reuse the approved source records. Inventories and evidence are retained for seven days; multi-GB source bundles are attached once on dependency publication, rather than copied to every app release.
 
