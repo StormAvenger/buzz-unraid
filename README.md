@@ -51,6 +51,8 @@ Writable folders must allow Unraid’s default user/group **99:100** (`nobody:us
 
 ## Updates & backups
 
+`:beta` receives early-access builds and may be less tested on hardware.
+
 Use `ghcr.io/stormavenger/buzz-unraid:latest` for stable updates, or a version tag from the [Releases page](https://github.com/StormAvenger/buzz-unraid/releases) to stay on a particular release. Check for updates on Unraid’s Docker page; for automatic installation, select Buzz in the **Auto Update Applications** plugin and choose a schedule.
 
 Back up appdata before upgrading. Keep the previous image tag and its matching backup for rollback. Dependency updates are larger downloads than app-only updates, which reuse the dependency layers.

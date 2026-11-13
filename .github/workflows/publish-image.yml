@@ -31,20 +31,12 @@ jobs:
       IMAGE: ghcr.io/stormavenger/buzz-unraid
       RELEASE_TAG: ${{ github.event.release.tag_name || format('v{0}', inputs.version) }}
       SHOULD_PUBLISH: ${{ github.event_name == 'release' || inputs.publish == true }}
-      IS_PRERELEASE: ${{ github.event.release.prerelease || false }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
       - name: Validate release version
-        shell: bash
-        run: |
-          VERSION="${RELEASE_TAG#v}"
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.-]+)?$ ]]; then
-            echo "Use a version such as 0.1.0 or 0.1.1-beta.1."
-            exit 1
-          fi
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+        run: python3 scripts/release-version.py "$RELEASE_TAG" >> "$GITHUB_ENV"
       - name: Check source and public file boundaries
         run: |
           python3 scripts/check-public-files.py
@@ -78,7 +70,11 @@ jobs:
         if: env.SHOULD_PUBLISH == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY"
+        run: |
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
+            --json tagName,isPrerelease,isDraft > /tmp/buzz-release.json
+          python3 scripts/release-version.py "$RELEASE_TAG" \
+            --release-json /tmp/buzz-release.json >> "$GITHUB_ENV"
       - name: Attach notices, sources and scan records before image publication
         if: env.SHOULD_PUBLISH == 'true'
         env:
@@ -98,14 +94,14 @@ jobs:
       - name: Publish tested image
         if: env.SHOULD_PUBLISH == 'true'
         run: docker push "$IMAGE:$VERSION"
-      - name: Update stable image tag
-        if: env.SHOULD_PUBLISH == 'true' && env.IS_PRERELEASE != 'true'
+      - name: Update release channel tags
+        if: env.SHOULD_PUBLISH == 'true'
         shell: bash
         run: |
-          if [[ "$VERSION" != *-* ]]; then
-            docker tag "$IMAGE:$VERSION" "$IMAGE:latest"
-            docker push "$IMAGE:latest"
-          fi
+          for channel in $CHANNEL_TAGS; do
+            docker tag "$IMAGE:$VERSION" "$IMAGE:$channel"
+            docker push "$IMAGE:$channel"
+          done
       - name: Collect smoke-test logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
