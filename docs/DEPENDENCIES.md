@@ -24,6 +24,8 @@ On Unraid, use the two plain Docker commands in the [development guide](DEVELOPM
 
 PR CI builds without publishing, runs the existing CPU/browser/storage checks, scans both clean images, and verifies sources. New dependency inputs collect sources in CI; app-only changes reuse the approved source records. Inventories and evidence are retained for seven days; multi-GB source bundles are attached once on dependency publication, rather than copied to every app release.
 
+Transient source-archive download errors receive up to seven attempts, with bounded backoff from 2 to 30 seconds. Missing sources, hash mismatches and exhausted retries still stop collection and publication. Changes to this collection recipe change the dependency key; they do not change the locked package versions.
+
 `python3 scripts/dependency.py layer-proof` makes a second app build from tracked sources with only a harmless toolbar CSS comment changed. It checks both full layer lists against the exact dependency-layer prefix and fails if app overhead exceeds 64 MiB. `dependency-layer-proof` CI artifacts contain the layer IDs and uncompressed byte sizes. This demonstrates content reuse; actual registry transfer sizes depend on compression/cache. No user files or host paths appear in this evidence.
 
 App release records retain a fresh inventory, notices and full image scan. `SOURCE-README.txt` links to the exact matching dependency release, while the app's GitHub source archive contains its patches/build recipes. Keep both app and dependency releases available for as long as their binaries are distributed.
