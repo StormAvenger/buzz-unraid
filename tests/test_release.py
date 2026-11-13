@@ -2,11 +2,13 @@
 """Release source records must preserve integrity and stay inside their output."""
 import importlib.util
 import io
+import hashlib
 from pathlib import Path
 import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("sources", ROOT / "scripts/collect-sources.py")
@@ -18,6 +20,61 @@ scan_spec.loader.exec_module(image_scan)
 
 
 class SourceRecordsTests(unittest.TestCase):
+    def test_interrupted_download_is_replaced_and_hash_checked_on_retry(self):
+        class Interrupted(io.BytesIO):
+            def read(self, size=-1):
+                if self.tell():
+                    raise OSError("connection interrupted")
+                return super().read(3)
+
+        content = b"complete matching source"
+        entry = {"url": "https://example.org/source.tar.gz", "component": "example",
+                 "sha256": hashlib.sha256(content).hexdigest()}
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(sources, "request", side_effect=[Interrupted(b"partial"), io.BytesIO(content)]), \
+                patch.object(sources.time, "sleep"):
+            result = sources.download(entry, Path(directory))
+            self.assertEqual((Path(directory) / result["file"]).read_bytes(), content)
+            self.assertEqual(result["sha256"], entry["sha256"])
+
+    def test_download_recovers_after_more_than_three_transient_failures(self):
+        content = b"matching upstream source"
+        entry = {"url": "https://example.org/source.tar.gz", "component": "example",
+                 "sha256": hashlib.sha256(content).hexdigest()}
+        errors = [HTTPError(entry["url"], 503, "Service Unavailable", {}, None) for _ in range(4)]
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(sources, "request", side_effect=errors + [io.BytesIO(content)]) as request, \
+                patch.object(sources.time, "sleep") as sleep:
+            result = sources.download(entry, Path(directory))
+            self.assertEqual(request.call_count, 5)
+            self.assertEqual([call.args[0] for call in sleep.call_args_list], [2, 4, 8, 16])
+            self.assertEqual((Path(directory) / result["file"]).read_bytes(), content)
+            self.assertEqual(result["sha256"], entry["sha256"])
+
+    def test_missing_source_and_hash_mismatch_are_not_retried(self):
+        entry = {"url": "https://example.org/source.tar.gz", "component": "example", "sha256": "0" * 64}
+        cases = ((HTTPError(entry["url"], 404, "Not Found", {}, None), HTTPError),
+                 (io.BytesIO(b"incorrect source"), ValueError))
+        for response, expected in cases:
+            with self.subTest(error=expected), tempfile.TemporaryDirectory() as directory, \
+                    patch.object(sources, "request", side_effect=[response]) as request, \
+                    patch.object(sources.time, "sleep") as sleep:
+                with self.assertRaises(expected):
+                    sources.download(entry, Path(directory))
+                self.assertEqual(request.call_count, 1)
+                sleep.assert_not_called()
+
+    def test_persistent_transient_failure_stays_fatal_with_bounded_retries(self):
+        entry = {"url": "https://example.org/source.tar.gz", "component": "example"}
+        errors = [HTTPError(entry["url"], 503, "Service Unavailable", {}, None) for _ in range(7)]
+        with tempfile.TemporaryDirectory() as directory, \
+                patch.object(sources, "request", side_effect=errors) as request, \
+                patch.object(sources.time, "sleep") as sleep:
+            with self.assertRaises(HTTPError):
+                sources.download(entry, Path(directory))
+            self.assertEqual(request.call_count, 7)
+            self.assertEqual([call.args[0] for call in sleep.call_args_list], [2, 4, 8, 16, 30, 30])
+
     def test_split_archive_reassembles_without_data_loss(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
