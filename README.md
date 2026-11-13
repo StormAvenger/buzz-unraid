@@ -1,158 +1,101 @@
 # Buzz Transcription for Unraid
 
-The real [Buzz](https://github.com/chidiwilliams/buzz) desktop application, accessible in a browser, with NVIDIA GPU transcription and persistent storage. This is an unofficial container maintained by StormAvenger.
+The real [Buzz](https://github.com/chidiwilliams/buzz) desktop in your browser, with NVIDIA transcription and persistent storage; an unofficial container maintained by StormAvenger.
 
-**Status:** [v0.1.2 is available](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.2). Tested on Unraid 7.3.4 with a GTX 1080 8 GB. A public speech sample uploaded through the browser was transcribed with Faster Whisper Small, producing TXT, SRT, and VTT files. This is one tested configuration, not a compatibility claim for every GPU or workflow. See [validation details](docs/VALIDATION.md).
+[![Latest release](https://img.shields.io/github/v/release/StormAvenger/buzz-unraid)](https://github.com/StormAvenger/buzz-unraid/releases/latest)
+[![License](https://img.shields.io/github/license/StormAvenger/buzz-unraid)](LICENSE)
 
-Public image: `ghcr.io/stormavenger/buzz-unraid:latest` (stable updates), or `ghcr.io/stormavenger/buzz-unraid:0.1.2` (fixed version). No registry login is required. **Community Applications approved the submission on October 27, 2026. The manual installation below works without a store listing.**
+## Features
 
-## Set up Buzz on Unraid
+- Real Buzz desktop, accessible in a browser.
+- NVIDIA GPU acceleration for transcription.
+- Upload files and download transcripts from the toolbar.
+- Persistent settings, models, and history.
+- Startup and GPU status with private diagnostics.
 
-The NVIDIA Driver plugin must already be installed and working. Once the catalog updates, search for **Buzz-Transcription** in Unraid's **Apps** tab. If the listing has not appeared yet, install the template with these commands in Unraid's Terminal:
+## Requirements & supported hardware
 
-```sh
-mkdir -p /boot/config/plugins/dockerMan/templates-user
-curl --fail --location --output /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml \
-  https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/templates/buzz.xml
-```
+Use an **amd64 Unraid server** with the **NVIDIA Driver plugin** installed and working.
 
-Go to **Docker → Add Container**, select **Buzz-Transcription** from the templates, and choose just two folders:
+- **Tested:** GTX 1080 (Pascal).
+- **Expected to work, untested:** other NVIDIA GTX 10 through RTX 40 cards.
+- **Not supported yet:** RTX 50 (Blackwell), AMD, Intel, or Apple Silicon.
+- CPU-only transcription works but is slow; the supplied Unraid template requires the NVIDIA runtime.
 
-1. **Input folder:** where your audio and video files are stored.
-2. **Output folder:** where you want transcripts and subtitles saved.
+Uses a CUDA 12.6 PyTorch build, the last line that supports Pascal GPUs.
 
-Click **Apply**, then click the Buzz icon and choose **WebUI**. All other settings are prefilled under **Show more settings**, including appdata, browser uploads, GPU selection, and web port **8088**. Change those only if your setup needs it.
+## Install
 
-While Buzz opens, a startup screen shows its readiness. If startup or the desktop connection is delayed, it offers guidance and **Retry connection**.
+Open **Apps → search Buzz-Transcription → Install**. Choose your **Input folder** and **Output folder**, click **Apply**, then choose **WebUI** from the container’s icon menu.
 
-## Use Buzz
+Everything else is prefilled under **Show more settings**.
 
-1. Start the container and choose **WebUI** from its Unraid icon menu.
-2. For existing server recordings, import files from `/input` using Buzz's **+** button.
-3. For laptop files, click **Upload files** in the top bar and choose your recordings. Upload progress appears automatically. Click Buzz's **+** button: the file picker defaults to `/uploads`, where those files are saved. After you choose another folder, Buzz remembers it; enter `/uploads` to return to uploaded files, or `/input` for your mapped server recordings.
-4. Start with **Faster Whisper → Small**. These are first-run defaults; later choices are preserved.
-5. To leave live transcription, click **Back to main page** in the top bar. This closes the live-recording window and returns to your file list. File transcription jobs keep running.
-6. Click **Download transcripts** in the top bar to browse finished TXT, SRT, and VTT files and save them to your computer. Exports also appear in your chosen output folder on Unraid.
+## Using Buzz
 
-The top bar shows **GPU available**, **CPU mode**, or a GPU-check problem. Click the indicator for an explanation. This checks compatibility, not live GPU use by individual jobs. **Diagnostics** downloads a local JSON report of technical status and recent status events; it excludes raw logs, recordings, transcripts, credentials, private paths, hostnames, IP addresses, and GPU identifiers. Nothing is uploaded automatically.
+1. Click **Upload files** in the top bar and choose recordings from your computer.
+2. Click Buzz’s **+** button. The picker defaults to `/uploads`; after selecting another folder, Buzz remembers it. Open `/input` for existing server recordings.
+3. Start with **Faster Whisper → Small**, choose transcription options, and start processing.
+4. Click **Download transcripts** to save finished TXT, SRT, or VTT files. Exports also appear in your Output folder.
+5. Use **Back to main page** to leave live recording without stopping file jobs.
 
-The first use downloads the chosen model into appdata. Subsequent local transcription can run without a cloud API. Telemetry is disabled. URL downloads and optional API features need their respective network services.
-
-If the desktop looks small, open the browser sidebar → **Settings → Scaling Mode → Remote Resizing**. This fits the desktop to the browser window and is saved in that browser.
-
-This is a single-user desktop session: browser connections share one Buzz application and history. Use it on a trusted LAN or through a VPN. Browser audio playback is configured but has not been verified; microphone forwarding is not configured.
-
-## Storage
+## Folders
 
 | Container folder | Default Unraid folder | Access | Purpose |
 |---|---|---|---|
-| `/config` | `/mnt/user/appdata/buzz-transcription` | Read/write | Settings, history, model downloads and caches |
+| `/config` | `/mnt/user/appdata/buzz-transcription` | Read/write | Settings, history, models and caches |
 | `/input` | `/mnt/user/transcription-input` | Read-only | Existing recordings |
 | `/uploads` | `/mnt/user/transcription-uploads` | Read/write | Browser uploads |
 | `/output` | `/mnt/user/transcriptions` | Read/write | Transcripts and subtitles |
 
-The browser file manager is limited to the three media folders. Buzz can see the container filesystem and the folders explicitly mapped into it. The default user/group IDs are Unraid's `99:100` (`nobody:users`). Existing writable folders must permit those IDs to write. Startup initializes only the top level of a newly empty uploads/output folder; it does not recursively change existing media shares. The dedicated appdata tree is managed by the GUI base.
+Writable folders must allow Unraid’s default user/group **99:100** (`nobody:users`) to write.
 
-Automatic exports use `/output` unless a task explicitly chooses another destination. In manual Save/Export dialogs, select `/output`. Buzz's watched-folder mode moves or deletes sources, so it is not configured for read-only `/input`.
-
-Existing installations retain their saved name and appdata mapping. New installs use the distinct name and `/mnt/user/appdata/buzz-transcription` folder to avoid overlap with the unrelated Buzz collaboration app. Before installing both apps on the same server, rename any existing transcription container to `Buzz-Transcription` and give each app its own non-overlapping appdata folder.
-
-## Build and install locally on Unraid
-
-For development or a custom build, use the Unraid server or another Linux amd64 Docker host. Normal installations can use the published image above.
-
-1. Clone or extract this repository into a dedicated build directory, such as `/mnt/user/appdata/buzz-build/buzz-unraid`. Keep it separate from `/mnt/user/appdata/buzz-transcription`, which stores application data.
-2. Choose an input folder for recordings and an output folder for transcripts. The remaining folder settings are prefilled.
-3. Build:
-
-   ```sh
-   cd /mnt/user/appdata/buzz-build/buzz-unraid
-   docker build -f Dockerfile.deps -t buzz-unraid-deps:local .
-   docker build --build-arg DEPS_IMAGE=buzz-unraid-deps:local -t buzz-unraid:0.1.2-dev .
-   ```
-
-   These commands need only Docker on Unraid; host Python is not required. The Python helper remains the CI/development path for dependency identity and approved digest handling.
-
-   The ML dependency stack is substantial. Allow generous Docker storage and time for the first build. The final image build checks that the actual runtime can create Buzz's window, import its decoders, preserve preferences, and route exports correctly.
-
-4. Generate the development template using the image's Python interpreter, even if Unraid does not have Python installed:
-
-   ```sh
-   docker run --rm --entrypoint /opt/venv/bin/python \
-     -v "$PWD:/source:ro" buzz-unraid:0.1.2-dev \
-     /source/scripts/local-template.py \
-     > /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml
-   ```
-
-5. Go to **Docker → Add Container → Buzz-Transcription**, choose your **Input folder** and **Output folder**, and click **Apply**. The template uses the locally built image; it is not a Docker Hub image.
-6. Click the Buzz icon and choose **WebUI**. The default web port is **8088**. If another app uses it, expand **Show more settings** and change **Web port**.
-
-The NVIDIA Driver plugin/runtime must already work on Unraid. Host drivers stay on the server; the image supplies user-space CUDA libraries. For one NVIDIA GPU, `NVIDIA_VISIBLE_DEVICES=all` is sufficient. With multiple cards, use the intended GPU UUID from `nvidia-smi -L`.
-
-Unraid's **Autostart** is a separate setting in its Docker page. Enable it there if you want Buzz to start after a server reboot.
-
-## Updates
+## Updates & backups
 
 `:beta` receives early-access builds and may be less tested on hardware.
 
-Use `ghcr.io/stormavenger/buzz-unraid:latest` to receive stable releases through Unraid's Docker update checks. For automatic installation, enable your Buzz-Transcription container in the **Auto Update Applications** plugin and choose a schedule. GitHub builds, checks, and publishes the image when a stable release is published; Unraid downloads that image from GHCR.
+Use `ghcr.io/stormavenger/buzz-unraid:latest` for stable updates, or a version tag from the [Releases page](https://github.com/StormAvenger/buzz-unraid/releases) to stay on a particular release. Check for updates on Unraid’s Docker page; for automatic installation, select Buzz in the **Auto Update Applications** plugin and choose a schedule.
 
-Back up appdata before upgrading. Keep the previous version tag and its matching backup for rollback. Selecting a fixed tag such as `:0.1.0` keeps that version until you change it.
+Back up appdata before upgrading. Keep the previous image tag and its matching backup for rollback. Dependency updates are larger downloads than app-only updates, which reuse the dependency layers.
 
-## GPU verification
+## Troubleshooting
 
-In the container's Console:
+- **GPU unavailable:** check the NVIDIA Driver plugin and GPU selection under **Show more settings**. In the container’s Console, run:
 
-```sh
-python /opt/buzz/gpu-check.py
-```
+  ```sh
+  python /opt/buzz/gpu-check.py
+  python /opt/buzz/gpu-check.py --transcribe /input/sample.wav
+  ```
 
-This runs real CUDA computation and queries CTranslate2's supported compute types. Card detection alone is not sufficient. To test CUDA inference with a clearly spoken recording:
+  Replace `sample.wav` with a spoken recording in your Input folder; the second check downloads Tiny if needed.
+- **Desktop looks small:** browser sidebar → **Settings → Scaling Mode → Remote Resizing**.
+- **Permission errors:** check writable-folder ownership and permissions for **99:100**.
+- **Port 8088 in use:** change **Web port** under **Show more settings**.
+- **Manual template fallback:** run in Unraid’s Terminal, then use **Docker → Add Container → Buzz-Transcription**:
 
-```sh
-python /opt/buzz/gpu-check.py --transcribe /input/sample.wav
-```
+  ```sh
+  mkdir -p /boot/config/plugins/dockerMan/templates-user
+  curl --fail --location -o /boot/config/plugins/dockerMan/templates-user/my-Buzz-Transcription.xml \
+    https://raw.githubusercontent.com/StormAvenger/buzz-unraid/main/templates/buzz.xml
+  ```
 
-This downloads Tiny if needed and transcribes using `int8_float32`. Also test through the Buzz UI to exercise its complete workflow.
+For more information about a problem, download **Diagnostics** from the top bar.
 
-The image pins PyTorch 2.8.0 CUDA 12.6 because newer CUDA builds can omit Pascal support. It adapts Faster Whisper's reduced-memory mode to `int8_float32` when the GPU lacks `int8_float16` support. Larger models, other GPUs, speaker identification, and speech separation need separate testing.
+## Security & privacy
 
-## Compose alternative
+This is a single-user session: browser connections share the desktop and history. Use a trusted LAN or VPN; no login is available yet. Telemetry is disabled, and diagnostics stay local until you choose to share them. The first model download comes from Hugging Face; later local transcription can run offline. URL imports and optional API features need their respective services.
 
-```sh
-cp .env.example .env
-# Edit the folder paths and GPU selection in .env.
-python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
-docker compose -f compose.yaml -f compose.nvidia.yaml up -d --no-build
-```
+## Limitations
 
-For a browser/CPU test without requesting a GPU, omit the NVIDIA override:
+No microphone forwarding. Browser audio playback is unverified. Buzz plugins needing extra Python packages are unsupported. Faster Whisper is the tested backend.
 
-```sh
-docker compose up -d --no-build
-```
+## Support
 
-Both target Linux amd64; this is not a native Apple Silicon image.
+Report problems through [GitHub Issues](https://github.com/StormAvenger/buzz-unraid/issues) and attach the **Diagnostics JSON**.
 
-## Development and releases
-
-```sh
-python3 -m unittest discover -s tests -v
-docker compose -f compose.yaml -f compose.nvidia.yaml config --quiet
-python3 scripts/dependency.py build --bootstrap --image buzz-unraid:0.1.2-dev
-sh scripts/smoke-test.sh buzz-unraid:0.1.2-dev
-```
-
-The disposable CPU smoke test checks web readiness, the real application window, write permissions, and restart persistence. It removes only its own test container and anonymous volumes. The normal GitHub workflow builds/tests; it does not publish images. The separate **Publish image** workflow runs on published GitHub releases after the redistribution/source review described in [publishing notes](docs/PUBLISHING.md).
-
-Runtime plugin package installation is blocked by default to keep dependencies predictable. Disabled plugins do not attempt dependency installation. Plugins requiring extra packages need those packages added to the image and a rebuild. The explicit runtime-install override forfeits the locked-dependency guarantee and is not supported for the standard deployment.
-
-For upgrades, stop the container, back up appdata, and retain the previous image before changing versions. Database changes may require the matching appdata backup for rollback. See [maintenance decisions](docs/MAINTENANCE.md) for dependency pins and the TorchCodec compatibility override.
+Building from source: [development guide](docs/DEVELOPMENT.md).
 
 ## License
 
 Container-specific code and original assets are licensed under the [MIT License](LICENSE).
 
 Buzz is also MIT licensed. Bundled third-party software retains its respective licenses; see [third-party notices](THIRD_PARTY_NOTICES.md).
-
-Dependency/app build details and the first-publication procedure are in [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md).

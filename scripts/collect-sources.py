@@ -44,7 +44,10 @@ def download(entry, directory):
     basename = re.sub(r"[^A-Za-z0-9._+-]", "_", basename) or "source.archive"
     filename = re.sub(r"[^A-Za-z0-9._+-]", "_", entry["component"]) + "--" + basename
     path = directory / filename
-    for attempt in range(3):
+    # Source servers sometimes stay unavailable longer than the old 2s/4s
+    # retry window. Keep retries bounded, without weakening source integrity.
+    attempts = 7
+    for attempt in range(attempts):
         digest = hashlib.sha256()
         try:
             with request(url) as response, path.open("wb") as target:
@@ -55,10 +58,17 @@ def download(entry, directory):
             if entry.get("sha256") and value != entry["sha256"]:
                 raise ValueError(f"Source hash mismatch: {entry['component']}")
             return {**entry, "file": filename, "sha256": value, "bytes": path.stat().st_size}
-        except (OSError, HTTPError):
-            if attempt == 2:
+        except (OSError, HTTPError) as error:
+            if isinstance(error, HTTPError):
+                error.close()
+                if error.code not in (408, 429, 500, 502, 503, 504):
+                    raise
+            if attempt == attempts - 1:
                 raise
-            time.sleep(2 * (attempt + 1))
+            delay = min(2 ** (attempt + 1), 30)
+            print(f"Retrying source download: {entry['component']} "
+                  f"(attempt {attempt + 2}/{attempts}, waiting {delay}s)", flush=True)
+            time.sleep(delay)
 
 
 def python_source(package):

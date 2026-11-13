@@ -2,11 +2,9 @@
 
 ## Current state
 
-The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. [v0.1.2](https://github.com/StormAvenger/buzz-unraid/releases/tag/v0.1.2) publishes the image as `ghcr.io/stormavenger/buzz-unraid:0.1.2` and `:latest`, with inventory, notices, scan results, matching sources, and checksums attached to the release. The [publication workflow](https://github.com/StormAvenger/buzz-unraid/actions/runs/40699900685) passed all gates.
+The source is public at [StormAvenger/buzz-unraid](https://github.com/StormAvenger/buzz-unraid) under MIT. Install **Buzz-Transcription** from Unraid’s **Apps** tab. The [latest stable release](https://github.com/StormAvenger/buzz-unraid/releases/latest) contains the published image’s records and known limitations; release-specific results belong in its notes.
 
-The official Community Applications scan found one valid Docker app, no hard errors, no template warnings, no starter placeholders, and a publicly pullable image. The submission was sent and auto-approved on October 27, 2026 as a non-duplicated Docker app. The portal says the app should appear after the next Community Applications catalog build publishes; catalog visibility has not yet been verified.
-
-The template now uses **Buzz-Transcription** with dedicated default appdata at `/mnt/user/appdata/buzz-transcription`, avoiding the unrelated Buzz collaboration app. The image tags and template URL are unchanged; existing installations retain their saved data mappings.
+Existing installations retain their saved names and appdata mappings. New installs use **Buzz-Transcription** with dedicated appdata to avoid overlap with the unrelated Buzz collaboration app.
 
 ## 1. Publish the source repository
 
